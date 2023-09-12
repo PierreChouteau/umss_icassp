@@ -74,22 +74,6 @@ voices = model_args['voices'] if 'voices' in model_args.keys() else 'satb'
 original_cunet = model_args['original_cu_net'] if 'original_cu_net' in model_args.keys() else False
 
 
-mix_model = False
-if mix_model:
-    # Load d'un warmup monophonique
-    name_model_mono = 'unsupervised_1s_string1song_crepe'
-    model_path_1s = 'trained_models/{}'.format(name_model_mono)
-
-    # load the best model in terms of validation loss
-    target_model_path = next(Path(model_path_1s).glob("%s*.pth" % name_model_mono))
-    state = torch.load(
-        target_model_path,
-        map_location=device
-    )
-    
-    trained_model.load_state_dict(state, strict=False)
-
-
 # Initialize results and results_masking path
 if args.test_set == 'CSD': test_set_add_on = 'CSD'
 elif args.test_set == 'BCBQ': test_set_add_on = 'BCBQ'

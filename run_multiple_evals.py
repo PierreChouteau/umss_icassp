@@ -7,14 +7,18 @@ models_to_evaluate = [
     # model trained on BC1Song
     "UMSS_4s_bc1song",
     "unet_4s_bc1song",
-    "Sf-Sft_bc1song",
-    "W-Up_bc1song",
+    # "Sf-Sf_bc1song",
+    # "Sft-Sft_bc1song",
+    # "Sf-Sft_bc1song",
+    # "W-Up_bc1song",
     
     # model trained on BCBQ
-    "UMSS_4s_bc1song",
-    "unet_4s_bc1song",
-    "Sf-Sft_bcbq",
-    "W-Up_bcbq",
+    "UMSS_4s_bcbq",
+    "unet_4s_bcbq",
+    # "Sf-Sf_bcbq",
+    # "Sft-Sft_bcbq",
+    # "Sf-Sft_bcbq",
+    # "W-Up_bcbq",
 ]
 
 eval_mode='default' # default evaluation

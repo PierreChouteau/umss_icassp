@@ -11,7 +11,7 @@ architecture: SourceFilterMixtureAutoencoder2
 
 # -------- DATASET PARAMETERS -----------------------
 
-dataset = CSD
+dataset = BCBQ
 one-song = True
 one-example = False
 one-batch = False
@@ -27,16 +27,19 @@ voices = satb  # satb
 # pre-emphasis-factor = 0.95
 # split = train        # if dataset = nus
 # source2-offset: 0.8  # if dataset = nus_mix
-train-song = Nino Dios
-val-song = Locus Iste
 
+# ---- CSD ----
+# train-song = Nino Dios
+# val-song = Locus Iste
+
+# ---- Cantoria ----
 # train-song = CEA # train_songs = ['LBM1', 'LBM2', 'LJT1', 'LJT2', 'LNG', 'RRC', 'SSS', 'HCB']
 # val-song = EJB1 # val_songs = ['THM', 'VBP', 'YSM']
 
 # -------- TRAINING PARAMETERS -----------------------
 
 epochs = 8000
-batch-size = 8
+batch-size = 15
 lr = 0.0001
 patience = 200
 lr-decay-patience = 80
