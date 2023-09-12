@@ -1,19 +1,17 @@
-# Unsupervised Music Source Separation Using Differentiable Parametric Source Models
+# A fully differentiable model for unsupervised singing voice separation
 
-This is the source code for the experiments related to the paper [Unsupervised Music Source Separation Using Differentiable Parametric Source Models](https://arxiv.org/abs/2201.09592).  
+This is the source code for the experiments related to our work on a differentiable model for unsupervised singing voice separation.  
 
-It contains a re-implementation of parts of the DDSP library in PyTorch. We added a differentiable all-pole filter which can be parameterized by line spectral frequencies or reflection coefficients. 
-
-Please cite the paper, if you use parts of the code in your work.
+We proposed to extend the work of Schultze-Foster et al., and to build a complete, fully differentiable model by integrating a multipitch estimator and a novel differentiable voice assignment module within the core model.
 
 ## Links
-[:loud_sound: Audio examples](https://schufo.github.io/umss/)
+[:loud_sound: Audio examples](https://pierrechouteau.github.io/)
 
-[:page_facing_up: Paper](https://arxiv.org/abs/2201.09592)
+[:page_facing_up: Schultze-Forster _et al._ Paper's](https://ieeexplore.ieee.org/document/10058592)
 
-[:file_folder: CSD Database](https://zenodo.org/record/1286570#.Y0ZsbNJByUk)
+[:file_folder:]() [CSD Database](https://zenodo.org/record/1286570#.Y0ZsbNJByUk) | [Cantoría Database](https://zenodo.org/record/5851070)
 
-[:microphone: Multiple-f0 estimation](https://github.com/helenacuesta/multif0-estimation-polyvocals)
+[:microphone:]() [Multiple-f0 estimation](https://github.com/helenacuesta/multif0-estimation-polyvocals) | [Multiple-f0 Assignement](https://github.com/helenacuesta/voas-vocal-quartets)
 
 ## Requirements
 
@@ -66,12 +64,4 @@ python train_u_nets.py -c unet_config.txt
 python eval.py --tag 'TAG' --f0-from-mix --test-set 'CSD'
 ```
 Note : 'TAG' is the evaluated model's name. (Example: unsupervised_2s_satb_bcbq_mf0_1)
-    
-## Acknowledgment
 
-This project has received funding from the European Union's Horizon 2020 research and innovation programme under the Marie Skłodowska-Curie grant agreement No. 765068.
-
-## Copyright
-
-Copyright 2021 Kilian Schulze-Forster of Télécom Paris, Institut Polytechnique de Paris.
-All rights reserved.
