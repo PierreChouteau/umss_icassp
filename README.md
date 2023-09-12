@@ -73,6 +73,6 @@ python eval.py --tag 'TAG' --f0-from-mix --test-set 'CSD'
 Note : 'TAG' is the evaluated model's name. (Example: UMSS_4s_bcbq)
 
 
-## Trained models
+## Trained models
 
-The trained models of our experiments are available [here](https://drive.google.com/drive/folders/1OICrCIajHvA-gv7XofF5GWrmEp0ME3e9?usp=drive_link).
+The trained models used in our experiments are available [here](https://drive.google.com/drive/folders/1OICrCIajHvA-gv7XofF5GWrmEp0ME3e9?usp=drive_link).
