@@ -5,9 +5,9 @@ This is the source code for the experiments related to our work on a differentia
 We proposed to extend the work of Schultze-Foster et al., and to build a complete, fully differentiable model by integrating a multipitch estimator and a novel differentiable voice assignment module within the core model.
 
 
-__Note 1 :__ This project builds upon the model of Schultze-Foster _et al._ and parts of the code are taken/adapted from their [repository](https://github.com/schufo/umss).
+__Note 1:__ This project builds upon the model of Schultze-Foster _et al._ and parts of the code are taken/adapted from their [repository](https://github.com/schufo/umss).
 
-__Note 2 :__ The trained models of [Cuesta _et al._](https://github.com/helenacuesta/multif0-estimation-polyvocals) (multiple-f0 estimation) and, [Cuesta and Gómez](https://github.com/helenacuesta/voas-vocal-quartets) (voice assignement) have been used in our experiments.
+__Note 2:__ The trained models of [Cuesta _et al._](https://github.com/helenacuesta/multif0-estimation-polyvocals) (multiple-f0 estimation) and, [Cuesta and Gómez](https://github.com/helenacuesta/voas-vocal-quartets) (voice assignment) have been used in our experiments.
 
 ## Links
 
@@ -70,7 +70,7 @@ python train_u_nets.py -c unet_config.txt
 ```
 python eval.py --tag 'TAG' --f0-from-mix --test-set 'CSD'
 ```
-Note : 'TAG' is the evaluated model's name. (Example: UMSS_4s_bcbq)
+Note: 'TAG' is the evaluated model's name. (Example: UMSS_4s_bcbq)
 
 
 ## Trained models
