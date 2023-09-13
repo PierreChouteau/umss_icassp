@@ -15,7 +15,7 @@ __Note 2:__ The trained models of [Cuesta _et al._](https://github.com/helenacue
 
 [:page_facing_up:]() [Schultze-Forster _et al._ paper](https://ieeexplore.ieee.org/document/10058592)
 
-[:page_facing_up:]() [Multiple-f0 estimation paper](https://program.ismir2020.net/poster_2-18.html) | [Multiple-f0 Assignement paper](https://transactions.ismir.net/articles/10.5334/tismir.121)
+[:page_facing_up:]() [Multiple-f0 estimation paper](https://program.ismir2020.net/poster_2-18.html) | [Multiple-f0 Assignment paper](https://transactions.ismir.net/articles/10.5334/tismir.121)
 
 [:file_folder:]() [CSD Database](https://zenodo.org/record/1286570#.Y0ZsbNJByUk) | [Cantoría Database](https://zenodo.org/record/5851070)
 
