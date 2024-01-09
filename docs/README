@@ -1,0 +1,33 @@
+# Minimal Mistakes theme
+
+Forked from https://github.com/mmistakes/minimal-mistakes.
+
+Main changes:
+- Deleted some files and folders
+    .editorconfig
+    .gitattributes
+    .github
+    /docs
+    /test
+    CHANGELOG.md
+    minimal-mistakes-jekyll.gemspec
+    README.md
+    screenshot-layouts.png
+    screenshot.png
+- Gemfile
+- config.yml
+
+To add a new page, create a file these info:
+    title: "Audio files"
+    layout: single
+    permalink: /path
+    author_profile: false
+and update the navigation.yml accordingly:
+    parent_page:
+  - title: "Your page Title"
+    url: https://yourname.github.io/path
+
+
+No underscore for folder names
+
+To modify the homepage content, either modify index.html or replace it by another file.
