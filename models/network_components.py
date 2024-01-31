@@ -5,7 +5,7 @@
 
 import torch
 import numpy as np
-from ddsp import core, spectral_ops, synths
+from .ddsp import core, spectral_ops, synths
 
 import matplotlib.pyplot as plt
 

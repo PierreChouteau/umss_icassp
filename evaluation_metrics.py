@@ -3,7 +3,7 @@ import torch
 import torchaudio
 import numpy as np
 
-import ddsp.spectral_ops
+from models.ddsp import spectral_ops
 
 
 def spectral_snr(target, estimate, eval_frame_length=16000, fft_size=512, overlap=0.5):

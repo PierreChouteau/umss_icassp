@@ -11,7 +11,7 @@ import os
 import numpy as np
 import torch
 
-import ddsp.core
+from models.ddsp import core
 import data
 
 

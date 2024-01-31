@@ -5,13 +5,13 @@ import os
 import torch
 import numpy as np
 
-import model_utls
-import ddsp.spectral_ops, ddsp.core
+from models import model_utls
+from models.ddsp import spectral_ops, core
 
 import librosa
 import matplotlib.pyplot as plt
 
-import models
+from models import models
 
 def _sndfile_available():
     try:

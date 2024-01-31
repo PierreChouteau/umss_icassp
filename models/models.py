@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
-import network_components as nc
-from ddsp import spectral_ops, synths, core
-from model_utls import _Model
+from . import network_components as nc
+from .model_utls import _Model
+from .ddsp import spectral_ops, synths, core
 
 import matplotlib.pyplot as plt
 
@@ -12,7 +12,7 @@ import librosa as lb
 from scipy.ndimage import filters
 import numpy as np
 
-from preprocessing_multif0_cuesta_BCBQ import f0_assignement
+from preprocess_datasets.preprocessing_multif0_cuesta_BCBQ import f0_assignement
 
 import data
 

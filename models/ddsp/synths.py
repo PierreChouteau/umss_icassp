@@ -9,8 +9,8 @@ import torchaudio
 import numpy as np
 import scipy.signal
 
-from ddsp import processors
-from ddsp import core, spectral_ops
+from . import processors
+from . import core, spectral_ops
 
 import matplotlib.pyplot as plt
 

@@ -11,7 +11,7 @@ import os
 import numpy as np
 import torch
 
-import ddsp.core
+from models.ddsp import core
 
 
 def compute_frame_distance(frame_1, frame_2, assigned_frames=None, n=0, backward_pass=False):

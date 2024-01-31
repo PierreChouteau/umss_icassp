@@ -14,7 +14,7 @@ import data
 import models
 import utils
 import evaluation_metrics as em
-import ddsp.spectral_ops
+from models.ddsp import spectral_ops
 
 from tqdm import tqdm
 import time

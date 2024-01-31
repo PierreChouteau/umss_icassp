@@ -34,10 +34,10 @@ import pandas as pd
 import librosa as lb
 
 import data
-import models
+from models import models
 import utils
 import evaluation_metrics as em
-import ddsp.spectral_ops
+from models.ddsp import spectral_ops
 
 import math
 import random

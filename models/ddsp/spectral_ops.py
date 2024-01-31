@@ -13,8 +13,8 @@
 # PyTorch implementation of DDSP following closely the original code
 # https://github.com/magenta/ddsp/blob/master/ddsp/spectral_ops.py
 
-from ddsp.core import safe_log, pad_for_stft
-from ddsp.core import torch_float32
+from .core import safe_log, pad_for_stft
+from .core import torch_float32
 
 import librosa
 from librosa.util.utils import fix_length

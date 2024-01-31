@@ -17,7 +17,7 @@ import csv
 import itertools
 
 import utils
-import ddsp.core
+from models.ddsp import core
 
 import librosa
 from librosa.util.utils import fix_length
@@ -25,7 +25,7 @@ from librosa.util.utils import fix_length
 import pumpp
 import matplotlib.pyplot as plt
 
-import models
+from models import models
 from nnAudio import features
 
 
