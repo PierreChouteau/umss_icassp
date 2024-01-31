@@ -4,7 +4,7 @@
 
 This is the source code for the experiments related to our work on a differentiable model for unsupervised singing voice separation.  
 
-We proposed to extend the work of Schultze-Foster et al.$^{1}$, and to build a complete, fully differentiable model by integrating a multipitch estimator and a novel differentiable voice assignment module within the core model.
+We proposed to extend the work of Schultze-Foster et al. $^{1}$, and to build a complete, fully differentiable model by integrating a multipitch estimator and a novel differentiable voice assignment module within the core model.
 
 __Note 1:__ This project builds upon the model of Schultze-Foster et al. and parts of the code are taken/adapted from their [repository](https://github.com/schufo/umss).
 
