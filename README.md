@@ -4,19 +4,21 @@
 
 This is the source code for the experiments related to our work on a differentiable model for unsupervised singing voice separation.  
 
-We proposed to extend the work of Schultze-Foster et al., and to build a complete, fully differentiable model by integrating a multipitch estimator and a novel differentiable voice assignment module within the core model.
+We proposed to extend the work of Schultze-Foster et al.$^{1}$, and to build a complete, fully differentiable model by integrating a multipitch estimator and a novel differentiable voice assignment module within the core model.
 
-__Note 1:__ This project builds upon the model of Schultze-Foster _et al._ and parts of the code are taken/adapted from their [repository](https://github.com/schufo/umss).
+__Note 1:__ This project builds upon the model of Schultze-Foster et al. and parts of the code are taken/adapted from their [repository](https://github.com/schufo/umss).
 
-__Note 2:__ The trained models of [Cuesta _et al._](https://github.com/helenacuesta/multif0-estimation-polyvocals) (multiple-f0 estimation) and, [Cuesta and Gómez](https://github.com/helenacuesta/voas-vocal-quartets) (voice assignment) have been used in our experiments.
+__Note 2:__ The trained models of [multif0-estimation-polyvocals](https://github.com/helenacuesta/multif0-estimation-polyvocals)$^{2}$ and, [voas-vocal-quartets](https://github.com/helenacuesta/voas-vocal-quartets)$^{3}$ have been used in our experiments.
+
+1. K. Schulze-Forster, G. Richard, L. Kelley, C. S. J. Doire and R. Badeau, "Unsupervised Music Source Separation Using Differentiable Parametric Source Models," _IEEE/ACM Transactions on Audio, Speech, and Language Processing_, pp. 1-14, 2023
+
+2. H. Cuesta, B. McFee, and E. Gómez, “Multiple F0 Estimation in Vocal Ensembles using Convolutional Neural Networks”, in _ISMIR_, Montréal, Canada, 2020
+
+3. H. Cuesta and E. Gómez, “Voice Assignment in Vocal Quartets Using Deep Learning Models Based on Pitch Salience”, _Transactions of the International Society for Music Information_, 2022
 
 ## Links
 
 [:loud_sound: Audio examples](https://pierrechouteau.github.io/)
-
-[:page_facing_up:]() [Schultze-Forster _et al._ paper](https://ieeexplore.ieee.org/document/10058592)
-
-[:page_facing_up:]() [Multiple-f0 estimation paper](https://program.ismir2020.net/poster_2-18.html) | [Multiple-f0 Assignment paper](https://transactions.ismir.net/articles/10.5334/tismir.121)
 
 [:file_folder:]() [CSD Database](https://zenodo.org/record/1286570#.Y0ZsbNJByUk) | [Cantoría Database](https://zenodo.org/record/5851070)
 
