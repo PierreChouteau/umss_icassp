@@ -4,11 +4,11 @@
 
 This is the source code for the experiments related to our work on a differentiable model for unsupervised singing voice separation.  
 
-We proposed to extend the work of Schultze-Foster et al.^1^, and to build a complete, fully differentiable model by integrating a multipitch estimator and a novel differentiable voice assignment module within the core model.
+We proposed to extend the work of Schultze-Foster et al.$^{1}$, and to build a complete, fully differentiable model by integrating a multipitch estimator and a novel differentiable voice assignment module within the core model.
 
 __Note 1:__ This project builds upon the model of Schultze-Foster et al. and parts of the code are taken/adapted from their [repository](https://github.com/schufo/umss).
 
-__Note 2:__ The trained models of [multif0-estimation-polyvocals](https://github.com/helenacuesta/multif0-estimation-polyvocals)^2^ and, [voas-vocal-quartets](https://github.com/helenacuesta/voas-vocal-quartets)^3^ have been used in our experiments.
+__Note 2:__ The trained models of [multif0-estimation-polyvocals](https://github.com/helenacuesta/multif0-estimation-polyvocals)$^{2}$ and, [voas-vocal-quartets](https://github.com/helenacuesta/voas-vocal-quartets)$^{3}$ have been used in our experiments.
 
 1. K. Schulze-Forster, G. Richard, L. Kelley, C. S. J. Doire and R. Badeau, "Unsupervised Music Source Separation Using Differentiable Parametric Source Models," _IEEE/ACM Transactions on Audio, Speech, and Language Processing_, pp. 1-14, 2023
 
