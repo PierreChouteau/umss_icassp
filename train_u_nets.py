@@ -18,8 +18,8 @@ import matplotlib.pyplot as plt
 
 from torch.utils.tensorboard import SummaryWriter
 
-import model_utls
-from ddsp import losses, spectral_ops
+from models import model_utls
+from models.ddsp import losses, spectral_ops
 
 tqdm.monitor_interval = 0
 
