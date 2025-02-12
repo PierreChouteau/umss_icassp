@@ -250,7 +250,7 @@ def valid(args, network, device, valid_sampler, epoch, writer):
                             y_hat, sources, salience_maps, assignements, f0_network = network(x, f0)
 
                 else:
-                    y_hat, sources = network(x, f0)
+                    y_hat, sources, _, _, _ = network(x, f0)
             else:
                 y_hat = network(x, f0)
 
