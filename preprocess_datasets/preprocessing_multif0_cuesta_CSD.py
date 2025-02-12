@@ -12,7 +12,6 @@ import numpy as np
 import torch
 
 from models.ddsp import core
-import data
 
 
 def compute_frame_distance(frame_1, frame_2, assigned_frames=None, n=0, backward_pass=False):
@@ -256,7 +255,7 @@ for song in songs:
 
             # resample and save as torch.Tensor
             f0_cuesta = torch.tensor(f0_assigned).transpose(0, 1)  # [n_sources, n_frames]
-            f0_cuesta = ddsp.core.resample(f0_cuesta, n_stft_frames)
+            f0_cuesta = core.resample(f0_cuesta, n_stft_frames)
             f0_cuesta = f0_cuesta.transpose(0, 1)  # [n_frames, n_sources]
             f0_cuesta = f0_cuesta.flip(dims=(1,))
 

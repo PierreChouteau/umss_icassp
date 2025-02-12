@@ -14,12 +14,13 @@
 # PyTorch implementation of DDSP following closely the original code
 # https://github.com/magenta/ddsp/blob/master/ddsp/core.py
 
-from typing import Any, Dict, Text, TypeVar
-
-import torch
-import torchaudio
 import numpy as np
 from scipy import fftpack
+
+import torch
+import torch.nn.functional as F
+
+from typing import TypeVar
 
 Number = TypeVar('Number', int, float, np.ndarray, torch.Tensor)
 
@@ -54,7 +55,7 @@ def pad_for_stft(signal, frame_size, hop_length):
         # no padding needed
         return signal
     else:
-        signal = torch.nn.functional.pad(signal, pad=(0, pad_samples))
+        signal = F.pad(signal, pad=(0, pad_samples))
         return signal
 
 
@@ -263,7 +264,7 @@ def resample(inputs: torch.Tensor,
         outputs = inputs[:, :, :, None] if not is_4d else inputs
 
         outputs = outputs.permute(0, 2, 1, 3)   # [batch_size, n_channels, n_frames, optional]
-        outputs = torch.nn.functional.interpolate(outputs,
+        outputs = F.interpolate(outputs,
                                                   size=[n_timesteps, outputs.shape[3]],
                                                   mode=method,
                                                   align_corners=not add_endpoint)
@@ -351,7 +352,7 @@ def upsample_with_windows(inputs: torch.Tensor,
     x_windowed = x_windowed.reshape((-1, n_channels * window_length, n_frames))
 
     # overlap and add
-    x = torch.nn.functional.fold(x_windowed,
+    x = F.fold(x_windowed,
                                  output_size=(1, n_timesteps + window_length),
                                  kernel_size=(1, window_length),
                                  stride=(1, hop_size))
@@ -503,7 +504,7 @@ def pad_axis(x, padding=(0, 0), axis=0, **pad_kwargs):
   n_end_dims = len(x.shape) - axis - 1
   n_end_dims *= n_end_dims > 0
   paddings = [0, 0] * n_end_dims + list(padding) + [0, 0] * axis
-  return torch.nn.functional.pad(x, paddings, **pad_kwargs)
+  return F.pad(x, paddings, **pad_kwargs)
 
 
 def frequency_filter(audio: torch.Tensor,
@@ -700,7 +701,7 @@ def fft_convolve(audio: torch.Tensor,
     last_frame_size = audio_frames[-1].shape[-1]
     if last_frame_size < frame_size:
         pad_length = frame_size - last_frame_size
-        last_frame_padded = torch.nn.functional.pad(audio_frames[-1], pad=(0, pad_length))
+        last_frame_padded = F.pad(audio_frames[-1], pad=(0, pad_length))
         audio_frames = audio_frames[:-1] + [last_frame_padded]
 
     audio_frames = torch.stack(audio_frames, dim=1)  # [batch_size, n_frames, frame_size]
@@ -717,9 +718,9 @@ def fft_convolve(audio: torch.Tensor,
     # Pad and FFT the audio and impulse responses.
     fft_size = get_fft_size(frame_size, ir_size, power_of_2=True)
     pad_length_audio = fft_size - frame_size
-    audio_frames = torch.nn.functional.pad(audio_frames, pad=(0, pad_length_audio))
+    audio_frames = F.pad(audio_frames, pad=(0, pad_length_audio))
     pad_length_ir = fft_size - ir_size
-    impulse_response = torch.nn.functional.pad(impulse_response, pad=(0, pad_length_ir))
+    impulse_response = F.pad(impulse_response, pad=(0, pad_length_ir))
 
     audio_fft = torch.view_as_complex(torch.rfft(audio_frames, signal_ndim=1))
     ir_fft = torch.view_as_complex(torch.rfft(impulse_response, signal_ndim=1))
@@ -740,7 +741,7 @@ def fft_convolve(audio: torch.Tensor,
     audio_out_size = (n_ir_frames - 1) * frame_size + fft_size  # time domain length after frame-wise convolution
 
     # same as audio_out = tf.signal.overlap_and_add(audio_frames_out, hop_size)
-    audio_out = torch.nn.functional.fold(audio_frames_out,
+    audio_out = F.fold(audio_frames_out,
                                          output_size=(1, audio_out_size),
                                          kernel_size=(1, fft_size),
                                          stride=(1, frame_size))
@@ -878,7 +879,7 @@ def fft_convolve_windowed(audio: torch.Tensor,
 
     # Cut audio into frames.
     audio = audio[:, None, None, :]  # add a channel dim and a spatial dim for torch.unfold (requires 4D input)
-    audio_frames = torch.nn.functional.unfold(audio, kernel_size=(1, audio_frame_size), stride=(1, hop_size))  # [batch_size, frame_size, n_frames]
+    audio_frames = F.unfold(audio, kernel_size=(1, audio_frame_size), stride=(1, hop_size))  # [batch_size, frame_size, n_frames]
     audio_frames = audio_frames.transpose(1, 2)  # [batch_size, n_frames, frame_size]
 
     # frame_size = int(np.ceil(audio_size / n_ir_frames))
@@ -889,7 +890,7 @@ def fft_convolve_windowed(audio: torch.Tensor,
     # last_frame_size = audio_frames[-1].shape[-1]
     # if last_frame_size < frame_size:
     #     pad_length = frame_size - last_frame_size
-    #     last_frame_padded = torch.nn.functional.pad(audio_frames[-1], pad=(0, pad_length))
+    #     last_frame_padded = F.pad(audio_frames[-1], pad=(0, pad_length))
     #     audio_frames = audio_frames[:-1] + [last_frame_padded]
 
     # audio_frames = torch.stack(audio_frames, dim=1)  # [batch_size, n_frames, frame_size]
@@ -906,9 +907,9 @@ def fft_convolve_windowed(audio: torch.Tensor,
     # Pad and FFT the audio and impulse responses.
     fft_size = get_fft_size(audio_frame_size, ir_size, power_of_2=True)
     pad_length_audio = fft_size - audio_frame_size
-    audio_frames = torch.nn.functional.pad(audio_frames, pad=(0, pad_length_audio))
+    audio_frames = F.pad(audio_frames, pad=(0, pad_length_audio))
     pad_length_ir = fft_size - ir_size
-    impulse_response = torch.nn.functional.pad(impulse_response, pad=(0, pad_length_ir))
+    impulse_response = F.pad(impulse_response, pad=(0, pad_length_ir))
 
     audio_fft = torch.view_as_complex(torch.rfft(audio_frames, signal_ndim=1))
     ir_fft = torch.view_as_complex(torch.rfft(impulse_response, signal_ndim=1))
@@ -924,7 +925,7 @@ def fft_convolve_windowed(audio: torch.Tensor,
 
     window_size = fft_size # audio_frame_size + ir_size -1
     window = torch.hann_window(window_size, periodic=True, device=audio.device)
-    #window = torch.nn.functional.pad(window, pad=(0, fft_size-window_size))
+    #window = F.pad(window, pad=(0, fft_size-window_size))
     window = window[None, None, :]  # expand dims for batch and n_frames
 
     audio_frames_out = audio_frames_out.transpose(1, 2)  # [batch_size, fft_size, n_frames]
@@ -932,7 +933,7 @@ def fft_convolve_windowed(audio: torch.Tensor,
     audio_out_size = (n_ir_frames - 1) * hop_size + fft_size  # time domain length after frame-wise convolution
 
     # audio_out = tf.signal.overlap_and_add(audio_frames_out, hop_size)
-    audio_out = torch.nn.functional.fold(audio_frames_out,
+    audio_out = F.fold(audio_frames_out,
                                          output_size=(1, audio_out_size),
                                          kernel_size=(1, fft_size),
                                          stride=(1, hop_size))
@@ -1195,7 +1196,7 @@ def apply_all_pole_filter(audio: torch.Tensor,
 
     # Cut audio into frames.
     audio = audio[:, None, None, :]  # add a channel dim and a spatial dim for torch.unfold (requires 4D input)
-    audio_frames = torch.nn.functional.unfold(audio, kernel_size=(1, audio_block_size), stride=(1, hop_size))  # [batch_size, frame_size, n_frames]
+    audio_frames = F.unfold(audio, kernel_size=(1, audio_block_size), stride=(1, hop_size))  # [batch_size, frame_size, n_frames]
     audio_frames = audio_frames.transpose(1, 2)  # [batch_size, n_frames, frame_size]
 
     # Check that number of frames match.
@@ -1248,7 +1249,7 @@ def apply_all_pole_filter(audio: torch.Tensor,
 
     # overlap add back together
     audio_out_size = (n_audio_frames - 1) * hop_size + audio_block_size  # time domain length after frame-wise filtering
-    audio_out = torch.nn.functional.fold(filtered_audio,
+    audio_out = F.fold(filtered_audio,
                                          output_size=(1, audio_out_size),
                                          kernel_size=(1, audio_block_size),
                                          stride=(1, hop_size))
@@ -1328,7 +1329,7 @@ def frequencies_softmax(freqs: torch.Tensor,
         depth = int(freqs.shape[-1])
 
     # Probs: [B, T, N, D].
-    f_probs = torch.nn.functional.softmax(freqs, dim=-1)
+    f_probs = F.softmax(freqs, dim=-1)
 
     # [1, 1, 1, D]
     unit_bins = torch.linspace(0.0, 1.0, depth, device=f_probs.device)

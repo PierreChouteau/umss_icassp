@@ -1,25 +1,24 @@
-import argparse
-import models
-import data
-import torch
+import copy
+import json
+import os
+import random
+import shutil
 import time
 from pathlib import Path
-import tqdm
-import json
-import utils
-import numpy as np
-import random
-import os
-import copy
+
 import configargparse
-import shutil
+import numpy as np
+import tqdm
 
-import matplotlib.pyplot as plt
-
+import torch
+import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 
+import data
+import utils
 from models import model_utls
-from models.ddsp import losses, spectral_ops
+from models.ddsp import spectral_ops
+
 
 tqdm.monitor_interval = 0
 
@@ -52,7 +51,7 @@ def train(args, network, device, train_sampler, optimizer, ss_weights_dict):
 
         y_hat = network((x, f0))[:, 0, :, :]
 
-        loss_fn = torch.nn.L1Loss()
+        loss_fn = nn.L1Loss()
         loss = loss_fn(y_hat, target_mags)
 
         loss.backward()
@@ -85,63 +84,11 @@ def valid(args, network, device, valid_sampler):
 
             y_hat = network((x, f0))[:, 0, :, :]
 
-            loss_fn = torch.nn.L1Loss()
+            loss_fn = nn.L1Loss()
             loss = loss_fn(y_hat, target_mags)
 
             loss_container.update(loss.item(), f0.size(0))
         return loss_container.avg
-
-
-def get_statistics(args, dataset):
-
-    # dataset is an instance of a torch.utils.data.Dataset class
-
-    scaler = sklearn.preprocessing.StandardScaler()  # tool to compute mean and variance of data
-
-    # define operation that computes magnitude spectrograms
-    spec = torch.nn.Sequential(
-        model.STFT(n_fft=args.nfft, n_hop=args.nhop),
-        model.Spectrogram(mono=True)
-    )
-    # return a deep copy of dataset:
-    # constructs a new compound object and recursively inserts copies of the objects found in the original
-    dataset_scaler = copy.deepcopy(dataset)
-
-    dataset_scaler.samples_per_track = 1
-    dataset_scaler.augmentations = None  # no scaling of sources before mixing
-    dataset_scaler.random_chunks = False  # no random chunking of tracks
-    dataset_scaler.random_track_mix = False  # no random accompaniments for vocals
-    dataset_scaler.random_interferer_mix = False
-    dataset_scaler.seq_duration = None  # if None, the original whole track from musdb is loaded
-
-    # make a progress bar:
-    # returns an iterator which acts exactly like the original iterable,
-    # but prints a dynamically updating progressbar every time a value is requested.
-    pbar = tqdm.tqdm(range(len(dataset_scaler)), disable=args.quiet)
-
-    for ind in pbar:
-        out = dataset_scaler[ind]  # x is mix and y is target source in time domain, z is text and ignored here
-        x = out[0]
-        y = out[1]
-        pbar.set_description("Compute dataset statistics")
-        X = spec(x[None, ...])  # X is mono magnitude spectrogram, ... means as many ':' as needed
-
-        # X is spectrogram of one full track
-        # at this point, X has shape (nb_frames, nb_samples, nb_channels, nb_bins) = (N, 1, 1, F)
-        # nb_frames: time steps, nb_bins: frequency bands, nb_samples: batch size
-
-        # online computation of mean and std on X for later scaling
-        # after squeezing, X has shape (N, F)
-        scaler.partial_fit(np.squeeze(X))  # np.squeeze: remove single-dimensional entries from the shape of an array
-
-    # set inital input scaler values
-    # scale_ and mean_ have shape (nb_bins,), standard deviation and mean are computed on each frequency band separately
-    # if std of a frequency bin is smaller than m = 1e-4 * (max std of all freq. bins), set it to m
-    std = np.maximum(   # maximum compares two arrays element wise and returns the maximum element wise
-        scaler.scale_,
-        1e-4*np.max(scaler.scale_)  # np.max = np.amax, it returns the max element of one array
-    )
-    return scaler.mean_, std
 
 
 def main():
@@ -159,7 +106,7 @@ def main():
     args, _ = parser.parse_known_args()
 
     # Dataset paramaters
-    parser.add_argument('--dataset', type=str, default="musdb",
+    parser.add_argument('--dataset', type=str, default="BCBQ",
                         help='Name of the dataset.')
     parser.add_argument('--one-example', action='store_true', default=False,
                         help='overfit to one example of the training set')

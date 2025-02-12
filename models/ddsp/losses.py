@@ -14,15 +14,10 @@
 # https://github.com/magenta/ddsp/blob/master/ddsp/losses.py
 
 import functools
-
-from . import spectral_ops
-from .core import hz_to_midi
-from .core import safe_divide
-from .core import torch_float32
-
-import numpy as np
 import torch
+import torch.nn as nn
 
+from models.ddsp import spectral_ops
 
 def mean_difference(target, value, loss_type='L1', weights=None):
     """Common loss functions.
@@ -52,7 +47,7 @@ def mean_difference(target, value, loss_type='L1', weights=None):
                          '"L1", "L2" '.format(loss_type))
 
 
-class SpectralLoss(torch.nn.Module):
+class SpectralLoss(nn.Module):
     """Multi-scale spectrogram loss.
     This loss is the bread-and-butter of comparing two audio signals. It offers
     a range of options to compare spectrograms, many of which are redunant, but
@@ -165,7 +160,7 @@ class SpectralLoss(torch.nn.Module):
         return loss
 
 
-class LSFRegularizer(torch.nn.Module):
+class LSFRegularizer(nn.Module):
 
     def __init__(self):
 

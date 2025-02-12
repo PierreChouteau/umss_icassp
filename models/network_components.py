@@ -3,15 +3,18 @@
 # elements commented with '# DDSP' are re-implemented in PyTorch from
 # https://github.com/magenta/ddsp/blob/master/ddsp/training/nn.py
 
-import torch
 import numpy as np
-from .ddsp import core, spectral_ops, synths
 
-import matplotlib.pyplot as plt
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+from models.ddsp import core, spectral_ops
+
 
 # -----------------Normalization -----------------------------------------------
 # DDSP
-class CustomLayerNorm(torch.nn.Module):
+class CustomLayerNorm(nn.Module):
     """Layer normalization
     with different properties of the learnable scale and shift parameters
     than in the original paper and the PyTorch implementation.
@@ -26,8 +29,8 @@ class CustomLayerNorm(torch.nn.Module):
             ch: (int) number of channels in input tensor [batch_size, ch, h, w]
         """
         super().__init__()
-        self.scale = torch.nn.parameter.Parameter(torch.ones((1, ch, 1, 1)))
-        self.shift = torch.nn.parameter.Parameter(torch.zeros((1, ch, 1, 1)))
+        self.scale = nn.parameter.Parameter(torch.ones((1, ch, 1, 1)))
+        self.shift = nn.parameter.Parameter(torch.zeros((1, ch, 1, 1)))
 
     def forward(self, x, eps=1e-5):
         """
@@ -46,7 +49,7 @@ class CustomLayerNorm(torch.nn.Module):
 
 # ---------------- Padding -----------------------------------------------------
 
-class SamePadding(torch.nn.Module):
+class SamePadding(nn.Module):
     """Same padding as done in Tensorflow according to
     https://mmuratarat.github.io/2019-01-17/implementing-padding-schemes-of-tensorflow-in-python
     In PyTorch, the padding option in conv. layers allows only for padding both sides of a dimension
@@ -99,7 +102,7 @@ class SamePadding(torch.nn.Module):
         pad_w_left = int(np.floor(pad_w / 2))
         pad_w_right = int(pad_w - pad_w_left)
 
-        y = torch.nn.functional.pad(x, pad=(pad_w_left, pad_w_right, pad_h_top, pad_h_bottom))
+        y = F.pad(x, pad=(pad_w_left, pad_w_right, pad_h_top, pad_h_bottom))
         return y
 
 
@@ -116,16 +119,16 @@ def norm_relu_conv(ch_in, ch_out, k, s):
         k: kernel size
         s: stride over w dimension
     """
-    layers = torch.nn.Sequential(
+    layers = nn.Sequential(
         CustomLayerNorm(ch_in),
-        torch.nn.ReLU(),
+        nn.ReLU(),
         SamePadding((k, k), (1, s)),
-        torch.nn.Conv2d(ch_in, ch_out, (k, k), stride=(1, s))
+        nn.Conv2d(ch_in, ch_out, (k, k), stride=(1, s))
     )
     return layers
 
 # DDSP
-class ResidualBlock(torch.nn.Module):
+class ResidualBlock(nn.Module):
     """A Block for ResNet, with a bottleneck.
     x --> Norm, ReLU, (1x1)-conv (ch_in -> ch_b)
       --> Norm, ReLU, (3x3)-conv (ch_b -> ch_b)
@@ -151,13 +154,13 @@ class ResidualBlock(torch.nn.Module):
         # Layers.
         self.norm_input = CustomLayerNorm(ch_in)
         if self.shortcut:
-            self.conv_proj = torch.nn.Sequential(
+            self.conv_proj = nn.Sequential(
                 SamePadding(k=(1,1), s=(1, stride)),
-                torch.nn.Conv2d(ch_in, ch_out, (1, 1), (1, stride))
+                nn.Conv2d(ch_in, ch_out, (1, 1), (1, stride))
             )
-        self.bottleneck = torch.nn.Sequential(
+        self.bottleneck = nn.Sequential(
             SamePadding(k=(1, 1), s=(1, 1)),
-            torch.nn.Conv2d(ch_in, ch_b, (1, 1), (1, 1)),
+            nn.Conv2d(ch_in, ch_b, (1, 1), (1, 1)),
             norm_relu_conv(ch_b, ch_b, k=3, s=stride),
             norm_relu_conv(ch_b, ch_out, k=1, s=1)
         )
@@ -194,8 +197,8 @@ def residual_stack(filters_in,
         for _ in range(1, n_layers):
             layers.append(ResidualBlock(ch_b*4, ch_b, stride=1, shortcut=False))
     layers.append(CustomLayerNorm(filters_b[-1]*4))
-    layers.append(torch.nn.ReLU())
-    return torch.nn.Sequential(*layers)
+    layers.append(nn.ReLU())
+    return nn.Sequential(*layers)
 
 
 # DDSP
@@ -209,13 +212,13 @@ def resnet(size='small'):
     ch_b, block_size = size_dict[size]
     layers = [
         SamePadding(k=7, s=(1,2)),
-        torch.nn.Conv2d(1, 64, (7, 7), (1, 2)),
+        nn.Conv2d(1, 64, (7, 7), (1, 2)),
         SamePadding(k=(1, 3), s=(1, 2)),
-        torch.nn.MaxPool2d(kernel_size=(1, 3), stride=(1, 2)),
+        nn.MaxPool2d(kernel_size=(1, 3), stride=(1, 2)),
         residual_stack([64, 4*ch_b, 4*2*ch_b], [ch_b, 2*ch_b, 4*ch_b], block_size, [1, 2, 2]),
         residual_stack([4*4*ch_b], [8*ch_b], [3], [2])
     ]
-    return torch.nn.Sequential(*layers)
+    return nn.Sequential(*layers)
 
 
 # -------------------- Sinusoidal to Harmonic Encoder ----------------------------------------
@@ -223,18 +226,18 @@ def resnet(size='small'):
 # DDSP
 def fc(ch_in=256, ch_out=256):
     layers = [
-        torch.nn.Linear(ch_in, ch_out),
-        torch.nn.LayerNorm(ch_out),  # normalization is done over the last dimension
-        torch.nn.LeakyReLU()
+        nn.Linear(ch_in, ch_out),
+        nn.LayerNorm(ch_out),  # normalization is done over the last dimension
+        nn.LeakyReLU()
     ]
-    return torch.nn.Sequential(*layers)
+    return nn.Sequential(*layers)
 
 # DDSP
 def fc_stack(ch_in=256, ch_out=256, layers=2):
-    return torch.nn.Sequential(*([fc(ch_in, ch_out)] + [fc(ch_out, ch_out) for i in range(layers-1)]))
+    return nn.Sequential(*([fc(ch_in, ch_out)] + [fc(ch_out, ch_out) for i in range(layers-1)]))
 
 # DDSP
-class SinusoidalToHarmonicEncoder(torch.nn.Module):
+class SinusoidalToHarmonicEncoder(nn.Module):
     """Predicts harmonic controls from sinusoidal controls.
     """
 
@@ -260,12 +263,12 @@ class SinusoidalToHarmonicEncoder(torch.nn.Module):
 
         # Layers.
         self.pre_rnn = fc_stack(ch_in=n_sinusoids_in*2, ch_out=fc_stack_ch, layers=fc_stack_layers)
-        self.rnn = torch.nn.GRU(input_size=fc_stack_ch, hidden_size=rnn_ch, batch_first=True)
+        self.rnn = nn.GRU(input_size=fc_stack_ch, hidden_size=rnn_ch, batch_first=True)
         self.post_rnn = fc_stack(ch_in=rnn_ch, ch_out=fc_stack_ch, layers=fc_stack_layers)
 
-        self.amp_out = torch.nn.Linear(fc_stack_ch, 1)
-        self.hd_out = torch.nn.Linear(fc_stack_ch, n_harmonics_out)
-        self.f0_out = torch.nn.Linear(fc_stack_ch, f0_depth)
+        self.amp_out = nn.Linear(fc_stack_ch, 1)
+        self.hd_out = nn.Linear(fc_stack_ch, n_harmonics_out)
+        self.f0_out = nn.Linear(fc_stack_ch, f0_depth)
 
     def forward(self, sin_freqs, sin_amps):
         """Converts (sin_freqs, sin_amps) to (f0, amp, hd).
@@ -311,7 +314,7 @@ class SinusoidalToHarmonicEncoder(torch.nn.Module):
 
 
 # -------------------- Encoders ----------------------------------------
-class AudioEncoderSimple(torch.nn.Module):
+class AudioEncoderSimple(nn.Module):
 
     """Encoder to transform some audio representation into latent representation z"""
 
@@ -326,8 +329,8 @@ class AudioEncoderSimple(torch.nn.Module):
         self.overlap = overlap
 
         self.layer_norm = CustomLayerNorm(fft_size//2 + 1)
-        self.gru = torch.nn.GRU(input_size=fft_size//2 + 1, hidden_size=256, batch_first=True)
-        self.dense = torch.nn.Linear(256, 128)
+        self.gru = nn.GRU(input_size=fft_size//2 + 1, hidden_size=256, batch_first=True)
+        self.dense = nn.Linear(256, 128)
 
     def forward(self, x):
         """
@@ -352,7 +355,7 @@ class AudioEncoderSimple(torch.nn.Module):
 
 
 
-class MixEncoderSimple(torch.nn.Module):
+class MixEncoderSimple(nn.Module):
 
     """Encoder to transform an audio mixture into a latent representation
      which is then copied in order to obtain as many copies as there are sources
@@ -378,10 +381,10 @@ class MixEncoderSimple(torch.nn.Module):
         else: input_size = hidden_size
 
         self.layer_norm = CustomLayerNorm(fft_size//2 + 1)
-        self.gru1 = torch.nn.GRU(input_size=fft_size//2 + 1, hidden_size=hidden_size, batch_first=True, bidirectional=bidirectional)
-        self.gru2 = torch.nn.GRU(input_size=input_size, hidden_size=hidden_size, batch_first=True, bidirectional=bidirectional)
-        self.gru3 = torch.nn.GRU(input_size=input_size, hidden_size=hidden_size, batch_first=True, bidirectional=bidirectional)
-        self.dense = torch.nn.Linear(input_size, embedding_size)
+        self.gru1 = nn.GRU(input_size=fft_size//2 + 1, hidden_size=hidden_size, batch_first=True, bidirectional=bidirectional)
+        self.gru2 = nn.GRU(input_size=input_size, hidden_size=hidden_size, batch_first=True, bidirectional=bidirectional)
+        self.gru3 = nn.GRU(input_size=input_size, hidden_size=hidden_size, batch_first=True, bidirectional=bidirectional)
+        self.dense = nn.Linear(input_size, embedding_size)
 
     def forward(self, x, _):
         """
@@ -417,7 +420,7 @@ class MixEncoderSimple(torch.nn.Module):
 
 
 
-class SynthParameterDecoderSimple(torch.nn.Module):
+class SynthParameterDecoderSimple(nn.Module):
 
     def __init__(self,
                  hidden_size=512,
@@ -431,7 +434,7 @@ class SynthParameterDecoderSimple(torch.nn.Module):
 
         self.f0_mlp = fc_stack(ch_in=1, ch_out=hidden_size, layers=3)
         self.z_mlp = fc_stack(ch_in=z_size, ch_out=hidden_size, layers=3)
-        self.gru = torch.nn.GRU(input_size=hidden_size*2, hidden_size=hidden_size, batch_first=True, bidirectional=bidirectional)
+        self.gru = nn.GRU(input_size=hidden_size*2, hidden_size=hidden_size, batch_first=True, bidirectional=bidirectional)
         self.mlp = fc_stack(ch_in=input_size, ch_out=output_size, layers=3)
 
 

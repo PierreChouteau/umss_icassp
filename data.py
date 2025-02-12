@@ -1,33 +1,20 @@
-from pathlib import Path
-import torch.utils.data
-from torch.nn.utils.rnn import pad_sequence
-
-import numpy as np
-import scipy.special
-
-import glob
-import argparse
-import random
-import torch
-import torchaudio
-import tqdm
-import os
-import pickle
 import csv
+import glob
 import itertools
-
-import utils
-from models.ddsp import core
 
 import librosa
 from librosa.util.utils import fix_length
-
-import pumpp
-import matplotlib.pyplot as plt
-
-from models import models
+import matplotlib.pyplot as plt 
 from nnAudio import features
+import numpy as np
+import pumpp
+import scipy.special
 
+import torch
+import torch.utils.data
+import torchaudio
+
+import utils
 
 def load_datasets(parser, args):
     """Loads the specified dataset from commandline arguments
@@ -36,45 +23,7 @@ def load_datasets(parser, args):
         train_dataset, validation_dataset
     """
 
-    if args.dataset == 'musdb':
-        parser.add_argument('--is-wav', action='store_true', default=False,
-                            help='loads wav instead of STEMS')
-        parser.add_argument('--samples-per-track', type=int, default=64)
-        parser.add_argument(
-            '--source-augmentations', type=str, nargs='+',
-            default=['gain', 'channelswap']
-        )
-
-        args = parser.parse_args()
-        dataset_kwargs = {
-            'root': args.root,
-            'is_wav': args.is_wav,
-            'subsets': 'train',
-            'target': args.target,
-            'download': args.root is None,
-            'seed': args.seed
-        }
-
-        source_augmentations = Compose(
-            [globals()['_augment_' + aug] for aug in args.source_augmentations]
-        )
-
-        train_dataset = MUSDBDataset(
-            split='train',
-            samples_per_track=args.samples_per_track,
-            seq_duration=args.seq_dur,
-            source_augmentations=source_augmentations,
-            random_track_mix=True,
-            **dataset_kwargs
-        )
-
-        valid_dataset = MUSDBDataset(
-            split='valid', samples_per_track=1, seq_duration=None,
-            **dataset_kwargs
-        )
-
-
-    elif args.dataset == 'CSD':
+    if args.dataset == 'CSD':
         parser.add_argument('--confidence-threshold', type=float, default=0.4)
         parser.add_argument('--samplerate', type=int, default=16000)
         parser.add_argument('--example-length', type=int, default=64000)

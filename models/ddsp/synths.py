@@ -3,16 +3,13 @@
 
 import functools
 
-import torch
-import torch.nn as nn
-import torchaudio
 import numpy as np
 import scipy.signal
 
-from . import processors
-from . import core, spectral_ops
+import torch
+import torch.nn.functional as F
 
-import matplotlib.pyplot as plt
+from models.ddsp import core, processors
 
 class Harmonic(processors.Processor):
     """Synthesize audio with a bank of harmonic sinusoidal oscillators."""
@@ -241,7 +238,7 @@ class GainNoise(processors.Processor):
         last_frame_size = audio_frames[-1].shape[-1]
         if last_frame_size < frame_size:
             pad_length = frame_size - last_frame_size
-            last_frame_padded = torch.nn.functional.pad(audio_frames[-1], pad=(0, pad_length))
+            last_frame_padded = F.pad(audio_frames[-1], pad=(0, pad_length))
             audio_frames = audio_frames[:-1] + [last_frame_padded]
         else: pad_length = 0
 
@@ -320,7 +317,7 @@ class VoiceUnvoicedNoise(processors.Processor):
 
         # Cut audio into frames.
         white_noise = white_noise[:, None, None, :]  # add a channel dim and a spatial dim for torch.unfold (requires 4D input)
-        white_noise_frames = torch.nn.functional.unfold(white_noise, kernel_size=(1, self.frame_length), stride=(1, hop_size))  # [batch_size, frame_size, n_frames]
+        white_noise_frames = F.unfold(white_noise, kernel_size=(1, self.frame_length), stride=(1, hop_size))  # [batch_size, frame_size, n_frames]
         white_noise_frames = white_noise_frames.transpose(1, 2)  # [batch_size, n_frames, frame_size]
 
         batch_size, n_audio_frames, frame_size = white_noise_frames.shape
@@ -350,7 +347,7 @@ class VoiceUnvoicedNoise(processors.Processor):
 
         # overlap add back together
         noise_frames = torch.transpose(noise_frames, 1, 2)  # [batch_size, frame_size, n_frames]
-        noise = torch.nn.functional.fold(noise_frames,
+        noise = F.fold(noise_frames,
                                              output_size=(1, padded_length),
                                              kernel_size=(1, self.frame_length),
                                              stride=(1, hop_size))
@@ -423,7 +420,7 @@ class VoiceUnvoicedNoise2(processors.Processor):
 
         # Cut audio into frames.
         white_noise = white_noise[:, None, None, :]  # add a channel dim and a spatial dim for torch.unfold (requires 4D input)
-        white_noise_frames = torch.nn.functional.unfold(white_noise, kernel_size=(1, self.frame_length), stride=(1, hop_size))  # [batch_size, frame_size, n_frames]
+        white_noise_frames = F.unfold(white_noise, kernel_size=(1, self.frame_length), stride=(1, hop_size))  # [batch_size, frame_size, n_frames]
         white_noise_frames = white_noise_frames.transpose(1, 2)  # [batch_size, n_frames, frame_size]
 
         batch_size, n_audio_frames, frame_size = white_noise_frames.shape
@@ -437,7 +434,7 @@ class VoiceUnvoicedNoise2(processors.Processor):
         # generate white noise filtered with specified FIR filter
         voiced_noise = torch.rand(size=white_noise.shape, device=device) * 2 - 1  # uniform in [-1, 1[
         voiced_noise = core.frequency_filter(voiced_noise[:, 0, 0, :], voiced_noise_magnitudes)[:, None, None, :]
-        voiced_noise_frames = torch.nn.functional.unfold(voiced_noise, kernel_size=(1, self.frame_length), stride=(1, hop_size))  # [batch_size, frame_size, n_frames]
+        voiced_noise_frames = F.unfold(voiced_noise, kernel_size=(1, self.frame_length), stride=(1, hop_size))  # [batch_size, frame_size, n_frames]
         voiced_noise_frames = voiced_noise_frames.transpose(1, 2)  # [batch_size, n_frames, frame_size]
 
         #  use filtered noise in voiced frames, white noise in unvoiced frames
@@ -454,7 +451,7 @@ class VoiceUnvoicedNoise2(processors.Processor):
 
         # overlap add back together
         noise_frames = torch.transpose(noise_frames, 1, 2)  # [batch_size, frame_size, n_frames]
-        noise = torch.nn.functional.fold(noise_frames,
+        noise = F.fold(noise_frames,
                                          output_size=(1, padded_length),
                                          kernel_size=(1, self.frame_length),
                                          stride=(1, hop_size))

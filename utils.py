@@ -6,7 +6,7 @@ import torch
 import numpy as np
 
 from models import model_utls
-from models.ddsp import spectral_ops, core
+import models.ddsp as ddsp
 
 import librosa
 import matplotlib.pyplot as plt

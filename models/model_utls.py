@@ -1,11 +1,11 @@
-import torch
+import torch.nn as nn
 
 # ------------------------------------------------------------------------------
 # Base model class
 # ------------------------------------------------------------------------------
 
 
-class _Model(torch.nn.Module):
+class _Model(nn.Module):
 
     """
     Base class for all models

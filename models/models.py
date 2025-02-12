@@ -1,20 +1,19 @@
-import torch
-import torch.nn as nn
-from torch.nn import functional as F
-
-from . import network_components as nc
-from .model_utls import _Model
-from .ddsp import spectral_ops, synths, core
-
-import matplotlib.pyplot as plt
-
-import librosa as lb
-from scipy.ndimage import filters
 import numpy as np
 
-from preprocess_datasets.preprocessing_multif0_cuesta_BCBQ import f0_assignement
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+import matplotlib.pyplot as plt
+from scipy.ndimage import filters
 
 import data
+
+from models import network_components as nc
+from models.model_utls import _Model 
+from models.ddsp import core, spectral_ops, synths
+
+from preprocess_datasets.preprocessing_multif0_cuesta_BCBQ import f0_assignement
 
 
 # -------- F0 extraction model based on Cuesta's model -------------------------------------------------------------------------------------------
@@ -182,14 +181,14 @@ class F0Extractor(_Model):
         n_layer = 0
         for i, layer in enumerate(model):
             if isinstance(layer, nn.Conv2d):
-                layer.weight = torch.nn.Parameter(torch.from_numpy(weights[n_layer][0]).permute(3, 2, 0, 1))
-                layer.bias = torch.nn.Parameter(torch.from_numpy(weights[n_layer][1]))
+                layer.weight = nn.Parameter(torch.from_numpy(weights[n_layer][0]).permute(3, 2, 0, 1))
+                layer.bias = nn.Parameter(torch.from_numpy(weights[n_layer][1]))
                 n_layer += 1
                 
             if isinstance(layer, nn.BatchNorm2d):
                 # in tf weight is gamma and bias is beta
-                layer.weight = torch.nn.Parameter(torch.from_numpy(weights[n_layer][0]))
-                layer.bias = torch.nn.Parameter(torch.from_numpy(weights[n_layer][1]))
+                layer.weight = nn.Parameter(torch.from_numpy(weights[n_layer][0]))
+                layer.bias = nn.Parameter(torch.from_numpy(weights[n_layer][1]))
                 layer.running_mean = torch.from_numpy(weights[n_layer][2])
                 layer.running_var = torch.from_numpy(weights[n_layer][3])
                 n_layer += 1
@@ -331,14 +330,14 @@ class F0Assigner(nn.Module):
             n_layer = 0
             for i, layer in enumerate(model):
                 if isinstance(layer, nn.Conv2d):
-                    layer.weight = torch.nn.Parameter(torch.from_numpy(weights[n_layer][0]).permute(3, 2, 0, 1))
-                    layer.bias = torch.nn.Parameter(torch.from_numpy(weights[n_layer][1]))
+                    layer.weight = nn.Parameter(torch.from_numpy(weights[n_layer][0]).permute(3, 2, 0, 1))
+                    layer.bias = nn.Parameter(torch.from_numpy(weights[n_layer][1]))
                     n_layer += 1
                     
                 if isinstance(layer, nn.BatchNorm2d):
                     # in tf weight is gamma and bias is beta
-                    layer.weight = torch.nn.Parameter(torch.from_numpy(weights[n_layer][0]))
-                    layer.bias = torch.nn.Parameter(torch.from_numpy(weights[n_layer][1]))
+                    layer.weight = nn.Parameter(torch.from_numpy(weights[n_layer][0]))
+                    layer.bias = nn.Parameter(torch.from_numpy(weights[n_layer][1]))
                     layer.running_mean = torch.from_numpy(weights[n_layer][2])
                     layer.running_var = torch.from_numpy(weights[n_layer][3])
                     n_layer += 1
@@ -348,8 +347,8 @@ class F0Assigner(nn.Module):
             n_layer = 0
             for i, layer in enumerate(model):
                 if isinstance(layer, nn.Conv2d):
-                    layer.weight = torch.nn.Parameter(torch.from_numpy(weights[n_layer]).permute(3, 2, 0, 1))
-                    layer.bias = torch.nn.Parameter(torch.from_numpy(bias[n_layer]))
+                    layer.weight = nn.Parameter(torch.from_numpy(weights[n_layer]).permute(3, 2, 0, 1))
+                    layer.bias = nn.Parameter(torch.from_numpy(bias[n_layer]))
                     n_layer += 1
                    
 
@@ -679,12 +678,12 @@ class SourceFilterMixtureAutoencoder2(_Model):
                                                       hidden_size=decoder_hidden_size,
                                                       output_size=decoder_output_size,
                                                       bidirectional=bidirectional)
-        self.dense_outs = torch.nn.ModuleList([torch.nn.Linear(decoder_output_size, v[1]) for v in output_splits])
+        self.dense_outs = nn.ModuleList([nn.Linear(decoder_output_size, v[1]) for v in output_splits])
 
         if self.harmonic_roll_off == -2:
-            self.gru_roll_off = torch.nn.GRU(decoder_output_size, 1, batch_first=True)
+            self.gru_roll_off = nn.GRU(decoder_output_size, 1, batch_first=True)
         if self.estimate_noise_mag:
-            self.gru_noise_mag = torch.nn.GRU(decoder_output_size, 40, batch_first=True)
+            self.gru_noise_mag = nn.GRU(decoder_output_size, 40, batch_first=True)
 
         # synth
         self.source_filter_synth = synths.SourceFilterSynth2(n_samples=n_samples,
@@ -870,7 +869,7 @@ class SourceFilterMixtureAutoencoder2(_Model):
 
 # -------- U-Net Baselines -------------------------------------------------------------------------------------------
 
-class NormalizeSpec(torch.nn.Module):
+class NormalizeSpec(nn.Module):
     def __init__(self):
         super(NormalizeSpec, self).__init__()
 
@@ -890,7 +889,7 @@ class NormalizeSpec(torch.nn.Module):
         return norm_spec
 
 
-class ConditionGenerator(torch.nn.Module):
+class ConditionGenerator(nn.Module):
 
     """
     Process f0 information in a more efficient way
@@ -906,11 +905,11 @@ class ConditionGenerator(torch.nn.Module):
 
         in_features = int(n_fft//2 + 1)
 
-        self.linear_gamma_1 = torch.nn.Linear(in_features, in_features)
-        self.linear_gamma_2 = torch.nn.Linear(in_features, in_features)
+        self.linear_gamma_1 = nn.Linear(in_features, in_features)
+        self.linear_gamma_2 = nn.Linear(in_features, in_features)
 
-        self.linear_beta_1 = torch.nn.Linear(in_features, in_features)
-        self.linear_beta_2 = torch.nn.Linear(in_features, in_features)
+        self.linear_beta_1 = nn.Linear(in_features, in_features)
+        self.linear_beta_2 = nn.Linear(in_features, in_features)
 
     def forward(self, f0_hz):
 
@@ -983,7 +982,7 @@ def gaussian_kernel1d(sigma, truncate=4.0):
 
 
 
-class ConditionGeneratorOriginal(torch.nn.Module):
+class ConditionGeneratorOriginal(nn.Module):
 
     """
     Process the f0 information exactly as done in "Petermann et al.,
@@ -1000,12 +999,12 @@ class ConditionGeneratorOriginal(torch.nn.Module):
 
         self.gaussian_kernel = torch.tensor(gaussian_kernel1d(sigma=1.), dtype=torch.float32)[None, None, :]
 
-        self.conv1 = torch.nn.Conv1d(361, 16, kernel_size=10, stride=1, padding=4)
-        self.conv2 = torch.nn.Conv1d(16, 64, kernel_size=10, stride=1, padding=4)
-        self.conv3 = torch.nn.Conv1d(64, 256, kernel_size=10, stride=1, padding=4)
+        self.conv1 = nn.Conv1d(361, 16, kernel_size=10, stride=1, padding=4)
+        self.conv2 = nn.Conv1d(16, 64, kernel_size=10, stride=1, padding=4)
+        self.conv3 = nn.Conv1d(64, 256, kernel_size=10, stride=1, padding=4)
 
-        self.linear_gamma = torch.nn.Linear(256, 513)
-        self.linear_beta = torch.nn.Linear(256, 513)
+        self.linear_gamma = nn.Linear(256, 513)
+        self.linear_beta = nn.Linear(256, 513)
 
 
     def forward(self, f0_hz):
@@ -1026,16 +1025,16 @@ class ConditionGeneratorOriginal(torch.nn.Module):
         padding = self.gaussian_kernel.shape[-1] // 2
         f0_one_hot = f0_one_hot.reshape((batch_size * n_frames, 361))[:, None, :]
 
-        f0_blured = torch.nn.functional.conv1d(f0_one_hot, self.gaussian_kernel.to(device), padding=padding)
+        f0_blured = F.conv1d(f0_one_hot, self.gaussian_kernel.to(device), padding=padding)
         f0_blured = f0_blured.reshape((batch_size, n_frames, -1))
         f0_blured = f0_blured / f0_blured.max(dim=2, keepdim=True)[0]
         f0_blured = f0_blured.transpose(1, 2)  # [batch_size, n_channels, n_frames]
 
-        f0_blured = torch.nn.functional.pad(f0_blured, pad=(0, 1))
+        f0_blured = F.pad(f0_blured, pad=(0, 1))
         x = self.conv1(f0_blured)
-        x = torch.nn.functional.pad(x, pad=(0, 1))
+        x = F.pad(x, pad=(0, 1))
         x = self.conv2(x)
-        x = torch.nn.functional.pad(x, pad=(0, 1))
+        x = F.pad(x, pad=(0, 1))
         x = self.conv3(x)  # [batch_size, 256, n_frames]
 
         x = x.transpose(1, 2)  # [batch_size, n_frames, 256]
@@ -1077,7 +1076,7 @@ class BaselineUnet(_Model):
         self.overlap = 1 - n_hop / n_fft
 
         self.register_buffer('sample_rate', torch.tensor(sample_rate))
-        #self.transform = torch.nn.Sequential(self.stft, self.spec, self.normalize)
+        #self.transform = nn.Sequential(self.stft, self.spec, self.normalize)
 
         if original:
             self.condition_generator = ConditionGeneratorOriginal(n_fft=n_fft, overlap=self.overlap)
@@ -1086,67 +1085,67 @@ class BaselineUnet(_Model):
 
 
         # Define the network components
-        self.conv1 = torch.nn.Sequential(
-            torch.nn.Conv2d(1, 16, kernel_size=(5, 5), stride=(2, 2), padding=2),
-            torch.nn.BatchNorm2d(16),
-            torch.nn.LeakyReLU(True)
+        self.conv1 = nn.Sequential(
+            nn.Conv2d(1, 16, kernel_size=(5, 5), stride=(2, 2), padding=2),
+            nn.BatchNorm2d(16),
+            nn.LeakyReLU(True)
         )
-        self.conv2 = torch.nn.Sequential(
-            torch.nn.Conv2d(16, 32, kernel_size=(5, 5), stride=(2, 2), padding=2),
-            torch.nn.BatchNorm2d(32),
-            torch.nn.LeakyReLU(True)
+        self.conv2 = nn.Sequential(
+            nn.Conv2d(16, 32, kernel_size=(5, 5), stride=(2, 2), padding=2),
+            nn.BatchNorm2d(32),
+            nn.LeakyReLU(True)
         )
-        self.conv3 = torch.nn.Sequential(
-            torch.nn.Conv2d(32, 64, kernel_size=(5, 5), stride=(2, 2), padding=2),
-            torch.nn.BatchNorm2d(64),
-            torch.nn.LeakyReLU(True)
+        self.conv3 = nn.Sequential(
+            nn.Conv2d(32, 64, kernel_size=(5, 5), stride=(2, 2), padding=2),
+            nn.BatchNorm2d(64),
+            nn.LeakyReLU(True)
         )
-        self.conv4 = torch.nn.Sequential(
-            torch.nn.Conv2d(64, 128, kernel_size=(5, 5), stride=(2, 2), padding=2),
-            torch.nn.BatchNorm2d(128),
-            torch.nn.LeakyReLU(True)
+        self.conv4 = nn.Sequential(
+            nn.Conv2d(64, 128, kernel_size=(5, 5), stride=(2, 2), padding=2),
+            nn.BatchNorm2d(128),
+            nn.LeakyReLU(True)
         )
-        self.conv5 = torch.nn.Sequential(
-            torch.nn.Conv2d(128, 256, kernel_size=(5, 5), stride=(2, 2), padding=2),
-            torch.nn.BatchNorm2d(256),
-            torch.nn.LeakyReLU(True)
+        self.conv5 = nn.Sequential(
+            nn.Conv2d(128, 256, kernel_size=(5, 5), stride=(2, 2), padding=2),
+            nn.BatchNorm2d(256),
+            nn.LeakyReLU(True)
         )
-        self.conv6 = torch.nn.Sequential(
-            torch.nn.Conv2d(256, 512, kernel_size=(5, 5), stride=(2, 2), padding=2),
-            torch.nn.BatchNorm2d(512),
-            torch.nn.LeakyReLU(True)
+        self.conv6 = nn.Sequential(
+            nn.Conv2d(256, 512, kernel_size=(5, 5), stride=(2, 2), padding=2),
+            nn.BatchNorm2d(512),
+            nn.LeakyReLU(True)
         )
-        self.deconv1 = torch.nn.ConvTranspose2d(512, 256, kernel_size=(5, 5), stride=(2, 2), padding=2)
-        self.deconv1_BAD = torch.nn.Sequential(
-            torch.nn.BatchNorm2d(256),
-            torch.nn.ReLU(True),
-            torch.nn.Dropout2d(0.5)
+        self.deconv1 = nn.ConvTranspose2d(512, 256, kernel_size=(5, 5), stride=(2, 2), padding=2)
+        self.deconv1_BAD = nn.Sequential(
+            nn.BatchNorm2d(256),
+            nn.ReLU(True),
+            nn.Dropout2d(0.5)
         )
-        self.deconv2 = torch.nn.ConvTranspose2d(512, 128, kernel_size=(5, 5), stride=(2, 2), padding=2)
-        self.deconv2_BAD = torch.nn.Sequential(
-            torch.nn.BatchNorm2d(128),
-            torch.nn.ReLU(True),
-            torch.nn.Dropout2d(0.5)
+        self.deconv2 = nn.ConvTranspose2d(512, 128, kernel_size=(5, 5), stride=(2, 2), padding=2)
+        self.deconv2_BAD = nn.Sequential(
+            nn.BatchNorm2d(128),
+            nn.ReLU(True),
+            nn.Dropout2d(0.5)
         )
-        self.deconv3 = torch.nn.ConvTranspose2d(256, 64, kernel_size=(5, 5), stride=(2, 2), padding=2)
-        self.deconv3_BAD = torch.nn.Sequential(
-            torch.nn.BatchNorm2d(64),
-            torch.nn.ReLU(True),
-            torch.nn.Dropout2d(0.5)
+        self.deconv3 = nn.ConvTranspose2d(256, 64, kernel_size=(5, 5), stride=(2, 2), padding=2)
+        self.deconv3_BAD = nn.Sequential(
+            nn.BatchNorm2d(64),
+            nn.ReLU(True),
+            nn.Dropout2d(0.5)
         )
-        self.deconv4 = torch.nn.ConvTranspose2d(128, 32, kernel_size=(5, 5), stride=(2, 2), padding=2)
-        self.deconv4_BAD = torch.nn.Sequential(
-            torch.nn.BatchNorm2d(32),
-            torch.nn.ReLU(True),
-            #torch.nn.Dropout2d(0.5)
+        self.deconv4 = nn.ConvTranspose2d(128, 32, kernel_size=(5, 5), stride=(2, 2), padding=2)
+        self.deconv4_BAD = nn.Sequential(
+            nn.BatchNorm2d(32),
+            nn.ReLU(True),
+            #nn.Dropout2d(0.5)
         )
-        self.deconv5 = torch.nn.ConvTranspose2d(64, 16, kernel_size=(5, 5), stride=(2, 2), padding=2)
-        self.deconv5_BAD = torch.nn.Sequential(
-            torch.nn.BatchNorm2d(16),
-            torch.nn.ReLU(True),
-            #torch.nn.Dropout2d(0.5)
+        self.deconv5 = nn.ConvTranspose2d(64, 16, kernel_size=(5, 5), stride=(2, 2), padding=2)
+        self.deconv5_BAD = nn.Sequential(
+            nn.BatchNorm2d(16),
+            nn.ReLU(True),
+            #nn.Dropout2d(0.5)
         )
-        self.deconv6 = torch.nn.ConvTranspose2d(32, 1, kernel_size=(5, 5), stride=(2, 2), padding=2)
+        self.deconv6 = nn.ConvTranspose2d(32, 1, kernel_size=(5, 5), stride=(2, 2), padding=2)
 
 
     @classmethod

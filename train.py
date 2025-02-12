@@ -1,23 +1,24 @@
-import argparse
-import models
-import data
-import torch
+import copy
+import json
+import os
+import random
+import shutil
 import time
 from pathlib import Path
-import tqdm
-import json
-import utils
-import numpy as np
-import random
-import os
-import copy
-import configargparse
-import shutil
 
+import configargparse
 import matplotlib.pyplot as plt
 
+import numpy as np 
+import tqdm
+
+import torch
+import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 
+import data
+import models
+import utils
 from models import model_utls
 from models.ddsp import losses
 
@@ -114,29 +115,29 @@ def train(args, network, device, train_sampler, optimizer, ss_weights_dict, epoc
             loss -= lsf_loss
         
         if args.loss_saliences_weight > 0:
-            loss_salience_fn = torch.nn.MSELoss()
+            loss_salience_fn = nn.MSELoss()
             loss_salience = loss_salience_fn(assignements.sum(dim=1), salience_maps[:,0,:,:].detach()) * args.loss_saliences_weight
             loss += loss_salience
             
         if args.loss_voices_weight > 0:
-            loss_voices_fn = torch.nn.MSELoss()
+            loss_voices_fn = nn.MSELoss()
             loss_voices = loss_voices_fn(assignements, (assignements * masks_batch).detach()) * args.loss_voices_weight
             loss += loss_voices
             
         if args.loss_comittment_weight > 0:
-            comittment_loss_fn = torch.nn.MSELoss()
+            comittment_loss_fn = nn.MSELoss()
             loss_comittment = comittment_loss_fn(assignements, assignements_rec.detach()) * args.loss_comittment_weight
             loss = loss + loss_comittment
         
         if args.loss_1voice_per_salience_weight > 0:
-            loss_1voice_per_salience_fn = torch.nn.MSELoss()
+            loss_1voice_per_salience_fn = nn.MSELoss()
             loss_1voice_per_salience = loss_1voice_per_salience_fn(assignements, assignements_rec.detach()) * args.loss_1voice_per_salience_weight
             loss += loss_1voice_per_salience
             
         if args.loss_f0_weight > 0:
             f0_network = f0_network.reshape(f0.shape)
     
-            loss_f0_fn = torch.nn.L1Loss()
+            loss_f0_fn = nn.L1Loss()
             loss_f0 = loss_f0_fn(f0_network, f0.detach()) * args.loss_f0_weight
             # loss += loss_f0
         
@@ -273,32 +274,32 @@ def valid(args, network, device, valid_sampler, epoch, writer):
             
             
             if args.loss_saliences_weight > 0:
-                loss_salience_fn = torch.nn.MSELoss()
+                loss_salience_fn = nn.MSELoss()
                 loss_salience = loss_salience_fn(assignements.sum(dim=1), salience_maps[:,0,:,:].detach()) * args.loss_saliences_weight
                 if args.reconstruction_loss_weight == 0:
                     loss += loss_salience
             
             if args.loss_voices_weight > 0:
-                loss_voices_fn = torch.nn.MSELoss()
+                loss_voices_fn = nn.MSELoss()
                 loss_voices = loss_voices_fn(assignements, (assignements * masks_batch).detach()) * args.loss_voices_weight
                 if args.reconstruction_loss_weight == 0:
                     loss += loss_voices
                 
             if args.loss_comittment_weight > 0:
-                comittment_loss_fn = torch.nn.MSELoss()
+                comittment_loss_fn = nn.MSELoss()
                 loss_comittment = comittment_loss_fn(assignements, assignements_rec.detach()) * args.loss_comittment_weight
                 if args.reconstruction_loss_weight == 0:
                     loss += loss_comittment
                 
             if args.loss_1voice_per_salience_weight > 0:
-                loss_1voice_per_salience_fn = torch.nn.MSELoss()
+                loss_1voice_per_salience_fn = nn.MSELoss()
                 loss_1voice_per_salience = loss_1voice_per_salience_fn(assignements, assignements_rec) * args.loss_1voice_per_salience_weight
                 # loss += loss_1voice_per_salience
             
             if args.loss_f0_weight > 0:
                 f0_network = f0_network.reshape(f0.shape)
                 
-                loss_f0_fn = torch.nn.L1Loss()
+                loss_f0_fn = nn.L1Loss()
                 loss_f0 = loss_f0_fn(f0_network, f0) * args.loss_f0_weight
                 # loss += loss_f0
             
@@ -355,58 +356,6 @@ def valid(args, network, device, valid_sampler, epoch, writer):
         return loss_container.avg
 
 
-def get_statistics(args, dataset):
-
-    # dataset is an instance of a torch.utils.data.Dataset class
-
-    scaler = sklearn.preprocessing.StandardScaler()  # tool to compute mean and variance of data
-
-    # define operation that computes magnitude spectrograms
-    spec = torch.nn.Sequential(
-        model.STFT(n_fft=args.nfft, n_hop=args.nhop),
-        model.Spectrogram(mono=True)
-    )
-    # return a deep copy of dataset:
-    # constructs a new compound object and recursively inserts copies of the objects found in the original
-    dataset_scaler = copy.deepcopy(dataset)
-
-    dataset_scaler.samples_per_track = 1
-    dataset_scaler.augmentations = None  # no scaling of sources before mixing
-    dataset_scaler.random_chunks = False  # no random chunking of tracks
-    dataset_scaler.random_track_mix = False  # no random accompaniments for vocals
-    dataset_scaler.random_interferer_mix = False
-    dataset_scaler.seq_duration = None  # if None, the original whole track from musdb is loaded
-
-    # make a progress bar:
-    # returns an iterator which acts exactly like the original iterable,
-    # but prints a dynamically updating progressbar every time a value is requested.
-    pbar = tqdm.tqdm(range(len(dataset_scaler)), disable=args.quiet)
-
-    for ind in pbar:
-        out = dataset_scaler[ind]  # x is mix and y is target source in time domain, z is text and ignored here
-        x = out[0]
-        y = out[1]
-        pbar.set_description("Compute dataset statistics")
-        X = spec(x[None, ...])  # X is mono magnitude spectrogram, ... means as many ':' as needed
-
-        # X is spectrogram of one full track
-        # at this point, X has shape (nb_frames, nb_samples, nb_channels, nb_bins) = (N, 1, 1, F)
-        # nb_frames: time steps, nb_bins: frequency bands, nb_samples: batch size
-
-        # online computation of mean and std on X for later scaling
-        # after squeezing, X has shape (N, F)
-        scaler.partial_fit(np.squeeze(X))  # np.squeeze: remove single-dimensional entries from the shape of an array
-
-    # set inital input scaler values
-    # scale_ and mean_ have shape (nb_bins,), standard deviation and mean are computed on each frequency band separately
-    # if std of a frequency bin is smaller than m = 1e-4 * (max std of all freq. bins), set it to m
-    std = np.maximum(   # maximum compares two arrays element wise and returns the maximum element wise
-        scaler.scale_,
-        1e-4*np.max(scaler.scale_)  # np.max = np.amax, it returns the max element of one array
-    )
-    return scaler.mean_, std
-
-
 def main():
     parser = configargparse.ArgParser()
     parser.add('-c', '--my-config', required=False, is_config_file=True, help='config file path', default='config.txt')
@@ -421,7 +370,7 @@ def main():
     args, _ = parser.parse_known_args()
 
     # Dataset paramaters
-    parser.add_argument('--dataset', type=str, default="musdb",
+    parser.add_argument('--dataset', type=str, default="BCBQ",
                         help='Name of the dataset.')
     parser.add_argument('--one-example', action='store_true', default=False,
                         help='overfit to one example of the training set')

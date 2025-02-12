@@ -4,7 +4,7 @@
 
 This is the source code for the experiments related to our work on a differentiable model for unsupervised singing voice separation.  
 
-We proposed to extend the work of Schultze-Foster et al. $^{1}$, and to build a complete, fully differentiable model by integrating a multipitch estimator and a novel differentiable voice assignment module within the core model.
+We proposed to extend the work of Schultze-Foster et al.$^{1}$, and to build a complete, fully differentiable model by integrating a multipitch estimator and a novel differentiable voice assignment module within the core model.
 
 __Note 1:__ This project builds upon the model of Schultze-Foster et al. and parts of the code are taken/adapted from their [repository](https://github.com/schufo/umss).
 
@@ -28,7 +28,7 @@ __Note 2:__ The trained models of [multif0-estimation-polyvocals](https://github
 ### With conda
 
 Create an environment using the `environment.yml` file:
-```
+```bash
 conda env create -f environment.yml
 ```
     
@@ -39,7 +39,7 @@ To start the training, run the `train.py` or `train_unets.py` script:
 python train.py -c config.txt
 ```
 
-``` 
+```bash
 python train_u_nets.py -c unet_config.txt
 ```
 
@@ -47,7 +47,7 @@ python train_u_nets.py -c unet_config.txt
 
 To evaluate the model, run the `eval.py` script:
 
-```
+```bash
 python eval.py --tag 'TAG' --f0-from-mix --test-set 'CSD'
 ```
 Note: 'TAG' is the evaluated model's name. (Example: UMSS_4s_bcbq)
@@ -64,12 +64,12 @@ python inference.py --audio_path AUDIO_PATH --tag TAG --mode MODE --output_dir O
 with:
 - `AUDIO_PATH`: path to the mixture audio file
 - `TAG`: name of the model to use (between our trained models, default is `W-Up_bcbq`)
-- `'MODE'`: mode to save the audio files (between `segmented_audio` and `full_audio`, default is `'segmented_audio'`).
-- `OUTPUT_DIR`: path where the separated voices will be saved (default is `'./output'`)
-- `'DEVICE'`: device to use (between `cpu` and `cuda`, default is `cpu`)
+- `MODE`: mode to save the audio files (between `segmented_audio` and `full_audio`, default is `segmented_audio`).
+- `OUTPUT_DIR`: path where the separated voices will be saved (default is `./output`)
+- `DEVICE`: device to use (between `cpu` and `cuda`, default is `cpu`)
 
 
-Note: Except for `'AUDIO_PATH'`, all other arguments are optional and have default values.
+Note: Except for `AUDIO_PATH`, all other arguments are optional and have default values.
 
 
 ## Trained models

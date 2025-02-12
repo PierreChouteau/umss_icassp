@@ -13,25 +13,19 @@
 # PyTorch implementation of DDSP following closely the original code
 # https://github.com/magenta/ddsp/blob/master/ddsp/spectral_ops.py
 
-from .core import safe_log, pad_for_stft
-from .core import torch_float32
-
 import librosa
 from librosa.util.utils import fix_length
+
 import scipy
 import numpy as np 
 
 import torch
+
 import torchaudio
-
-from pathlib import Path
-import torch.utils.data
-from torch.nn.utils.rnn import pad_sequence
-
-import pumpp
-import matplotlib.pyplot as plt
-
 from nnAudio import features
+
+from models.ddsp.core import safe_log, pad_for_stft
+from models.ddsp.core import torch_float32
 
 
 def stft(audio, frame_size=2048, overlap=0.75, center=False, pad_end=True):

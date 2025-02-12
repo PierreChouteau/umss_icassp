@@ -247,7 +247,7 @@ def f0_assignement(mf0, audio_length, n_sources):
     f0_cuesta = torch.tensor(f0_assigned).transpose(0, 1)  # [n_sources, n_frames]
     
     # It uses a bilinear interpolation to obtain smooth trajectories
-    f0_cuesta_old = ddsp.core.resample(f0_cuesta, n_stft_frames)
+    f0_cuesta_old = core.resample(f0_cuesta, n_stft_frames)
     
     # we remove the f0 values that are below the minimum of the f0 determined by cuesta => because they are not reliable
     for j, freqs in enumerate(f0_cuesta_old):
@@ -464,7 +464,7 @@ if __name__ == '__main__':
 
             # resample and save as torch.Tensor
             f0_cuesta = torch.tensor(f0_assigned).transpose(0, 1)  # [n_sources, n_frames]
-            f0_cuesta = ddsp.core.resample(f0_cuesta, n_stft_frames)
+            f0_cuesta = core.resample(f0_cuesta, n_stft_frames)
             f0_cuesta = f0_cuesta.transpose(0, 1)  # [n_frames, n_sources]
             f0_cuesta = f0_cuesta.flip(dims=(1,))
 

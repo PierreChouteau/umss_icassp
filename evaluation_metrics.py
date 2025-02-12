@@ -28,9 +28,9 @@ def spectral_snr(target, estimate, eval_frame_length=16000, fft_size=512, overla
     for n in range(n_eval_frames):
 
         # [batch_size, n_frequencies, n_frames]
-        target_mag_spec = ddsp.spectral_ops.compute_mag(target[:, n*eval_frame_length: (n+1)*eval_frame_length],
+        target_mag_spec = spectral_ops.compute_mag(target[:, n*eval_frame_length: (n+1)*eval_frame_length],
                                                         size=fft_size, overlap=overlap, center=True)
-        estimate_mag_spec = ddsp.spectral_ops.compute_mag(estimate[:, n*eval_frame_length: (n+1)*eval_frame_length],
+        estimate_mag_spec = spectral_ops.compute_mag(estimate[:, n*eval_frame_length: (n+1)*eval_frame_length],
                                                           size=fft_size, overlap=overlap, center=True)
 
         snr = torch.sum(target_mag_spec**2, dim=[1,2]) / torch.sum((estimate_mag_spec - target_mag_spec)**2, dim=[1,2])
@@ -64,9 +64,9 @@ def spectral_si_snr(target, estimate, eval_frame_length=16000, fft_size=512, ove
     for n in range(n_eval_frames):
 
         # [batch_size, n_frequencies, n_frames]
-        target_mag_spec = ddsp.spectral_ops.compute_mag(target[:, n*eval_frame_length: (n+1)*eval_frame_length],
+        target_mag_spec = spectral_ops.compute_mag(target[:, n*eval_frame_length: (n+1)*eval_frame_length],
                                                         size=fft_size, overlap=overlap, center=True)
-        estimate_mag_spec = ddsp.spectral_ops.compute_mag(estimate[:, n*eval_frame_length: (n+1)*eval_frame_length],
+        estimate_mag_spec = spectral_ops.compute_mag(estimate[:, n*eval_frame_length: (n+1)*eval_frame_length],
                                                           size=fft_size, overlap=overlap, center=True)
 
         scaler = torch.sum(target_mag_spec * estimate_mag_spec, dim=[1, 2], keepdim=True) / (torch.sum(target_mag_spec**2, dim=[1, 2], keepdim=True) + 1e-12)
