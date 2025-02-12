@@ -35,7 +35,7 @@ def compute_frame_distance(frame_1, frame_2, assigned_frames=None, n=0, backward
 
     Returns:
         distance: float, the distance between the two frames.
-umss_assigner/Datasets/CantoriaDataset_copy/mixtures_4_sources/mf0_cuesta_processed/Cantoria_EJB2_satb.pt
+umss_assigner/datasets/CantoriaDataset_copy/mixtures_4_sources/mf0_cuesta_processed/Cantoria_EJB2_satb.pt
     """
 
     frame_2 = frame_2.copy()
@@ -64,7 +64,7 @@ umss_assigner/Datasets/CantoriaDataset_copy/mixtures_4_sources/mf0_cuesta_proces
 
 
 
-path_to_dataset = './Datasets/CantoriaDataset'
+path_to_dataset = './datasets/CantoriaDataset'
 mixture_dirs = ['mixtures_4_sources']
 
 for s, mix_dir in enumerate(mixture_dirs):

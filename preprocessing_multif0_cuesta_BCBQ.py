@@ -266,7 +266,7 @@ def f0_assignement(mf0, audio_length, n_sources):
 
 
 if __name__ == '__main__':
-    path_to_dataset = '../Datasets/BC'
+    path_to_dataset = '../datasets/BC'
     # songs = ['El Rossinyol', 'Locus Iste', 'Nino Dios']
 
     # mixture_dirs = ['mixtures_2_sources', 'mixtures_3_sources', 'mixtures_4_sources']

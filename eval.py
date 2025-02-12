@@ -213,10 +213,10 @@ else: n_seeds = 1
 # index of signals to be removed in evaluation due to too low energy (considered as silence)
 # mandatory to obtain the same results as in the paper
 if model_args['n_sources'] == 4:
-    if args.test_set == 'CSD': energy_snippet = pd.read_pickle('./Datasets/ChoralSingingDataset/energy_snippets_4s.pandas')
-    elif args.test_set == 'cantoria': energy_snippet = pd.read_pickle('./Datasets/CantoriaDataset/energy_snippets_4s_bis.pandas')
+    if args.test_set == 'CSD': energy_snippet = pd.read_pickle('./datasets/ChoralSingingDataset/energy_snippets_4s.pandas')
+    elif args.test_set == 'cantoria': energy_snippet = pd.read_pickle('./datasets/CantoriaDataset/energy_snippets_4s.pandas')
 elif model_args['n_sources'] == 2:
-    energy_snippet = pd.read_pickle('./Datasets/ChoralSingingDataset/energy_snippets_2s.pandas')
+    energy_snippet = pd.read_pickle('./datasets/ChoralSingingDataset/energy_snippets_2s.pandas')
     
 energy_to_drop = []
 for i, energy in enumerate(energy_snippet["energy"]):

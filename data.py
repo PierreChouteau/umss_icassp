@@ -317,10 +317,10 @@ class CSD(torch.utils.data.Dataset):
         elif song_name == 'Locus Iste' : song_name = 'Locus_Iste'
         elif song_name == 'Nino Dios' : song_name = 'Nino_Dios'
 
-        self.audio_files = sorted(glob.glob('./Datasets/ChoralSingingDataset/{}/audio_16kHz/*.wav'.format(song_name)))
-        self.crepe_dir = './Datasets/ChoralSingingDataset/{}/crepe_f0_center'.format(song_name)
+        self.audio_files = sorted(glob.glob('./datasets/ChoralSingingDataset/{}/audio_16kHz/*.wav'.format(song_name)))
+        self.crepe_dir = './datasets/ChoralSingingDataset/{}/crepe_f0_center'.format(song_name)
 
-        f0_cuesta_dir = './Datasets/ChoralSingingDataset/{}/mixtures_{}_sources/mf0_cuesta_processed/*.pt'.format(song_name, n_sources)
+        f0_cuesta_dir = './datasets/ChoralSingingDataset/{}/mixtures_{}_sources/mf0_cuesta_processed/*.pt'.format(song_name, n_sources)
         self.f0_cuesta_files = sorted(list(glob.glob(f0_cuesta_dir)))
 
         if not random_mixes:
@@ -471,10 +471,10 @@ class BCBQDataSets(torch.utils.data.Dataset):
         self.voice_choices = [voices_dict[v] for v in allowed_voices]
         self.voice_ids = ['s', 'a', 't', 'b']
 
-        self.audio_files = sorted(glob.glob('./Datasets/{}/audio_16kHz/*.wav'.format(data_set)))
+        self.audio_files = sorted(glob.glob('./datasets/{}/audio_16kHz/*.wav'.format(data_set)))
         # file 17_BC021_part11_s_1ch.wav is empty  --> exclude 17_BC021_part11
         self.audio_files = [f for f in self.audio_files if '17_BC021_part11' not in f]
-        self.crepe_dir = './Datasets/{}/crepe_f0_center'.format(data_set)
+        self.crepe_dir = './datasets/{}/crepe_f0_center'.format(data_set)
 
         if data_set == 'BC':
             if one_song:
@@ -491,7 +491,7 @@ class BCBQDataSets(torch.utils.data.Dataset):
                 if validation_subset: self.audio_files = self.audio_files[- (13+11)*4 :]  # only 8_BQ and 9_BQ
                 else: self.audio_files = self.audio_files[: - (13+11)*4]  # all except 8_BQ and 9_BQ
 
-        self.f0_cuesta_dir = './Datasets/{}/mixtures_{}_sources/mf0_cuesta_processed'.format(data_set, n_sources)
+        self.f0_cuesta_dir = './datasets/{}/mixtures_{}_sources/mf0_cuesta_processed'.format(data_set, n_sources)
 
         if not random_mixes:
             # number of non-overlapping excerpts
@@ -675,10 +675,10 @@ class CantoriaDataSets(torch.utils.data.Dataset):
         elif song_name == 'VBP': self.total_audio_length = 69
         elif song_name == 'YSM': self.total_audio_length = 33
         
-        self.audio_files = sorted(glob.glob('./Datasets/CantoriaDataset/{}/audio_16kHz/*.wav'.format(song_name)))
-        self.crepe_dir = './Datasets/CantoriaDataset/{}/crepe_f0_center'.format(song_name)
+        self.audio_files = sorted(glob.glob('./datasets/CantoriaDataset/{}/audio_16kHz/*.wav'.format(song_name)))
+        self.crepe_dir = './datasets/CantoriaDataset/{}/crepe_f0_center'.format(song_name)
 
-        self.f0_cuesta_dir = './Datasets/CantoriaDataset/{}/mixtures_{}_sources/mf0_cuesta_processed'.format(song_name, n_sources)
+        self.f0_cuesta_dir = './datasets/CantoriaDataset/{}/mixtures_{}_sources/mf0_cuesta_processed'.format(song_name, n_sources)
         
         if not random_mixes:
             # number of non-overlapping excerpts
@@ -837,13 +837,13 @@ class String(torch.utils.data.Dataset):
         self.voice_choices = [voices_dict[v] for v in allowed_voices]
         self.voice_ids = ['s', 'a', 't', 'b']
 
-        self.audio_files = sorted(glob.glob('./Datasets/{}/audio_16kHz/*.wav'.format(data_set)))
-        self.crepe_dir = './Datasets/{}/crepe_f0_center'.format(data_set)
+        self.audio_files = sorted(glob.glob('./datasets/{}/audio_16kHz/*.wav'.format(data_set)))
+        self.crepe_dir = './datasets/{}/crepe_f0_center'.format(data_set)
 
         if validation_subset: self.audio_files = [f for f in self.audio_files if 'Violon2' in f]
         else: self.audio_files = [f for f in self.audio_files if ('Violon1', 'Viola', 'Cello') in f]
 
-        self.f0_cuesta_dir = './Datasets/{}/mixtures_{}_sources/mf0_cuesta_processed'.format(data_set, n_sources)
+        self.f0_cuesta_dir = './datasets/{}/mixtures_{}_sources/mf0_cuesta_processed'.format(data_set, n_sources)
 
         if not random_mixes:
             # number of non-overlapping excerpts
@@ -1241,7 +1241,7 @@ def save_multif0_output(times, freqs, output_path):
             csv_writer.writerow(row)
 
 def test_hcqt():
-    audio_fpath = "/home/pierre/OneDrive/TELECOM/code/umss-pre/Datasets/ChoralSingingDataset/El_Rossinyol/audio_16kHz/rossinyol_Bajos_107.wav"
+    audio_fpath = "/home/pierre/OneDrive/TELECOM/code/umss-pre/datasets/ChoralSingingDataset/El_Rossinyol/audio_16kHz/rossinyol_Bajos_107.wav"
     pump = create_pump_object()
     features = compute_pump_features(pump, audio_fpath)
 

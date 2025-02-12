@@ -1209,7 +1209,7 @@ def cuesta_model_test():
     
     # load audio file and compute hcqt
     # pump = data.create_pump_object()
-    # features = data.compute_pump_features(pump,'/home/ids/chouteau/umss/Datasets/BC/mixtures_4_sources/1_BC001_part12_satb.wav')
+    # features = data.compute_pump_features(pump,'/home/ids/chouteau/umss/datasets/BC/mixtures_4_sources/1_BC001_part12_satb.wav')
     # input_hcqt = features['dphase/mag'][0]
     # input_dphase = features['dphase/dphase'][0]
     
@@ -1276,7 +1276,7 @@ def cuesta_model_test():
     resampler = resampler.to(device)
     
     # load audio file and resample it to 22050 Hz
-    audio, sr = torchaudio.load('/home/ids/chouteau/umss/Datasets/BC/mixtures_4_sources/1_BC001_part12_satb.wav')
+    audio, sr = torchaudio.load('/home/ids/chouteau/umss/datasets/BC/mixtures_4_sources/1_BC001_part12_satb.wav')
     audio = resampler(audio)
     audio = audio.to(device)
     print(audio.shape)

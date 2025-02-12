@@ -79,7 +79,7 @@ tagsVoices = ['soprano','alto','tenor','bajo']
 for tagS in tagsSongs:
     satb_dict={}
     for tagV in tagsVoices:
-        mid = mido.MidiFile('../../Datasets/ChoralSingingDataset/{}/midi/{}_{}_midi.mid'.format(tagS[0],tagS[1],tagV), clip=True)
+        mid = mido.MidiFile('../../datasets/ChoralSingingDataset/{}/midi/{}_{}_midi.mid'.format(tagS[0],tagS[1],tagV), clip=True)
         # print(mid.tracks[0])
         msg_in_ms_df=create_msg_in_ms_df(mid,prnt=False)
         full_f0_df=create_full_f0_df(msg_in_ms_df,songLength=tagS[2],prnt=False)
