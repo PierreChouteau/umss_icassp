@@ -62,7 +62,7 @@ def compute_frame_distance(frame_1, frame_2, assigned_frames=None, n=0, backward
 
 
 
-path_to_dataset = './Datasets/CantoriaDataset'
+path_to_dataset = './datasets/CantoriaDataset'
 mixture_dirs = ['mixtures_4_sources']
 
 for s, mix_dir in enumerate(mixture_dirs):

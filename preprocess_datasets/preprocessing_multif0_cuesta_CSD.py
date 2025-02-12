@@ -63,7 +63,7 @@ def compute_frame_distance(frame_1, frame_2, assigned_frames=None, n=0, backward
 
 
 
-path_to_dataset = './Datasets/ChoralSingingDataset'
+path_to_dataset = './datasets/ChoralSingingDataset'
 songs = ['El_Rossinyol', 'Locus_Iste', 'Nino_Dios']
 
 mixture_dirs = ['mixtures_2_sources', 'mixtures_3_sources', 'mixtures_4_sources']

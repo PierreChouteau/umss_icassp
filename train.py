@@ -17,9 +17,8 @@ import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 
 import data
-import models
 import utils
-from models import model_utls
+from models import model_utls, models
 from models.ddsp import losses
 
 tqdm.monitor_interval = 0
@@ -65,7 +64,7 @@ def train(args, network, device, train_sampler, optimizer, ss_weights_dict, epoc
         
         optimizer.zero_grad()
         
-        if network.return_sources == True:
+        if network.return_sources:
             if network.F0Extractor is not None:
                 # test to show that if we use F0Extractor, there is no need for the frequency
                 # f0 = torch.zeros_like(f0).to(device)
@@ -154,7 +153,7 @@ def train(args, network, device, train_sampler, optimizer, ss_weights_dict, epoc
         if args.loss_1voice_per_salience_weight > 0: loss_1voice_per_salience_container.update(loss_1voice_per_salience.item(), f0.size(0))
     
     # log audio to tensorboard
-    if network.return_sources == True:
+    if network.return_sources:
         # [batch_size, n_sources, n_samples]
         source_estimates_masking = utils.masking_from_synth_signals_torch(x, sources, n_fft=2048, n_hop=256)
         source_estimates_masking = source_estimates_masking.reshape((args.batch_size, args.n_sources, -1))
@@ -233,7 +232,7 @@ def valid(args, network, device, valid_sampler, epoch, writer):
                 x, f0, original_sources = x.to(device), f0.to(device), original_sources.to(device) #, z.to(device)
                 
 
-            if network.return_sources == True:                
+            if network.return_sources:                
                 if network.F0Extractor is not None:
                     # test to show that if we use F0Extractor, there is no need for the frequency
                     # f0 = torch.zeros_like(f0).to(device)
@@ -251,7 +250,7 @@ def valid(args, network, device, valid_sampler, epoch, writer):
                             y_hat, sources, salience_maps, assignements, f0_network = network(x, f0)
 
                 else:
-                    y_hat, sources = network(x, f0)
+                    y_hat, sources, _, _, _ = network(x, f0)
             else:
                 y_hat = network(x, f0)
 
@@ -312,7 +311,7 @@ def valid(args, network, device, valid_sampler, epoch, writer):
             if args.loss_1voice_per_salience_weight > 0: loss_1voice_per_salience_container.update(loss_1voice_per_salience.item(), f0.size(0))
         
         # log audio to tensorboard
-        if network.return_sources == True:
+        if network.return_sources:
             batch_size = f0.size(0)
             
             # [batch_size * n_sources, n_samples]
@@ -523,17 +522,16 @@ def main():
     )
 
     # make dict for self supervision loss weights
-    ss_weights_dict = {'harmonic_amplitudes': args.harmonic_amp_loss_weight,
-                       'harmonic_distribution': 0.,
-                       'f0_hz': args.f0_hz_loss_weight,
-                       'harmonics_roll_off': args.harmonics_roll_off_loss_weight,
-                       'line_spectral_frequencies': args.lsf_loss_weight,
-                       'noise_gain': args.noise_gain_loss_weight,
-                       'voiced_unvoiced': 0.,
-                       'voiced_noise_magnitudes': args.noise_mags_loss_weight,
-                       }
-
-    train_args_dict = vars(args)
+    ss_weights_dict = {
+        'harmonic_amplitudes': args.harmonic_amp_loss_weight,
+        'harmonic_distribution': 0.,
+        'f0_hz': args.f0_hz_loss_weight,
+        'harmonics_roll_off': args.harmonics_roll_off_loss_weight,
+        'line_spectral_frequencies': args.lsf_loss_weight,
+        'noise_gain': args.noise_gain_loss_weight,
+        'voiced_unvoiced': 0.,
+        'voiced_noise_magnitudes': args.noise_mags_loss_weight,
+    }
 
     train_params_dict = copy.deepcopy(vars(args))  # return args as dictionary with no influence on args
 

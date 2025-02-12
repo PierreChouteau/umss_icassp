@@ -73,9 +73,7 @@ def load_datasets(parser, args):
                                          allowed_voices=args.voices,
                                          f0_from_mix=args.f0_cuesta,
                                          cunet_original=args.original_cu_net,
-                                         one_song=True,
-                                         F0_models=args.F0_models,
-                                         F0_models_trainable=args.F0_models_trainable)
+                                         one_song=True)
 
             valid_dataset = BCBQDataSets(data_set='BC',
                                          validation_subset=True,
@@ -87,9 +85,7 @@ def load_datasets(parser, args):
                                          allowed_voices=args.voices,
                                          f0_from_mix=args.f0_cuesta,
                                          cunet_original=args.original_cu_net,
-                                         one_song=True,
-                                         F0_models=args.F0_models,
-                                         F0_models_trainable=args.F0_models_trainable)
+                                         one_song=True)
         else:
             bc_train = BCBQDataSets(data_set='BC',
                                     validation_subset=False,
@@ -100,9 +96,7 @@ def load_datasets(parser, args):
                                     return_name=False,
                                     allowed_voices=args.voices,
                                     f0_from_mix=args.f0_cuesta,
-                                    cunet_original=args.original_cu_net,
-                                    F0_models=args.F0_models,
-                                    F0_models_trainable=args.F0_models_trainable)
+                                    cunet_original=args.original_cu_net)
 
             bq_train = BCBQDataSets(data_set='BQ',
                                     validation_subset=False,
@@ -113,9 +107,7 @@ def load_datasets(parser, args):
                                     return_name=False,
                                     allowed_voices=args.voices,
                                     f0_from_mix=args.f0_cuesta,
-                                    cunet_original=args.original_cu_net,
-                                    F0_models=args.F0_models,
-                                    F0_models_trainable=args.F0_models_trainable)
+                                    cunet_original=args.original_cu_net)
 
             bc_val = BCBQDataSets(data_set='BC',
                                   validation_subset=True,
@@ -126,9 +118,7 @@ def load_datasets(parser, args):
                                   return_name=False,
                                   allowed_voices=args.voices,
                                   f0_from_mix=args.f0_cuesta,
-                                  cunet_original=args.original_cu_net,
-                                  F0_models=args.F0_models,
-                                  F0_models_trainable=args.F0_models_trainable)
+                                  cunet_original=args.original_cu_net)
 
             bq_val = BCBQDataSets(data_set='BQ',
                                   validation_subset=True,
@@ -139,9 +129,7 @@ def load_datasets(parser, args):
                                   return_name=False,
                                   allowed_voices=args.voices,
                                   f0_from_mix=args.f0_cuesta,
-                                  cunet_original=args.original_cu_net,
-                                  F0_models=args.F0_models,
-                                  F0_models_trainable=args.F0_models_trainable)
+                                  cunet_original=args.original_cu_net)
 
             train_dataset = torch.utils.data.ConcatDataset([bc_train, bq_train])
             valid_dataset = torch.utils.data.ConcatDataset([bc_val, bq_val])
@@ -164,10 +152,7 @@ def load_datasets(parser, args):
                                         n_sources=args.n_sources, 
                                         random_mixes=True, 
                                         f0_from_mix=args.f0_cuesta, 
-                                        cunet_original=args.original_cu_net, 
-                                        F0_models=args.F0_models, 
-                                        F0_models_trainable=args.F0_models_trainable,
-                                        )
+                                        cunet_original=args.original_cu_net)
 
         valid_dataset = CantoriaDataSets(song_name=args.val_song,
                                         conf_threshold=args.confidence_threshold, 
@@ -177,10 +162,7 @@ def load_datasets(parser, args):
                                         n_sources=args.n_sources, 
                                         random_mixes=False, 
                                         f0_from_mix=args.f0_cuesta, 
-                                        cunet_original=args.original_cu_net, 
-                                        F0_models=args.F0_models, 
-                                        F0_models_trainable=args.F0_models_trainable,
-        )
+                                        cunet_original=args.original_cu_net)
         
     elif args.dataset == 'String':
         parser.add_argument('--confidence-threshold', type=float, default=0.4)
@@ -199,9 +181,7 @@ def load_datasets(parser, args):
                                     return_name=False,
                                     allowed_voices=args.voices,
                                     f0_from_mix=args.f0_cuesta,
-                                    cunet_original=args.original_cu_net,
-                                    F0_models=args.F0_models,
-                                    F0_models_trainable=args.F0_models_trainable)
+                                    cunet_original=args.original_cu_net)
 
         valid_dataset = String(data_set='String',
                                     validation_subset=True,
@@ -212,9 +192,10 @@ def load_datasets(parser, args):
                                     return_name=False,
                                     allowed_voices=args.voices,
                                     f0_from_mix=args.f0_cuesta,
-                                    cunet_original=args.original_cu_net,
-                                    F0_models=args.F0_models,
-                                    F0_models_trainable=args.F0_models_trainable)
+                                    cunet_original=args.original_cu_net)
+        
+    else:
+        raise ValueError(f"Unknown dataset: {args.dataset}")
         
     return train_dataset, valid_dataset, args
 
@@ -254,6 +235,7 @@ class CSD(torch.utils.data.Dataset):
 
         assert n_sources <= len(allowed_voices), 'number of sources ({}) is higher than ' \
                                                 'allowed voiced to sample from ({})'.format(n_sources, len(allowed_voices))
+        
         voices_dict = {'s': 0, 'a': 1, 't': 2, 'b': 3}
         self.voice_choices = [voices_dict[v] for v in allowed_voices]
 
@@ -266,10 +248,10 @@ class CSD(torch.utils.data.Dataset):
         elif song_name == 'Locus Iste' : song_name = 'Locus_Iste'
         elif song_name == 'Nino Dios' : song_name = 'Nino_Dios'
 
-        self.audio_files = sorted(glob.glob('./Datasets/ChoralSingingDataset/{}/audio_16kHz/*.wav'.format(song_name)))
-        self.crepe_dir = './Datasets/ChoralSingingDataset/{}/crepe_f0_center'.format(song_name)
+        self.audio_files = sorted(glob.glob('./datasets/ChoralSingingDataset/{}/audio_16kHz/*.wav'.format(song_name)))
+        self.crepe_dir = './datasets/ChoralSingingDataset/{}/crepe_f0_center'.format(song_name)
 
-        f0_cuesta_dir = './Datasets/ChoralSingingDataset/{}/mixtures_{}_sources/mf0_cuesta_processed/*.pt'.format(song_name, n_sources)
+        f0_cuesta_dir = './datasets/ChoralSingingDataset/{}/mixtures_{}_sources/mf0_cuesta_processed/*.pt'.format(song_name, n_sources)
         self.f0_cuesta_files = sorted(list(glob.glob(f0_cuesta_dir)))
 
         if not random_mixes:
@@ -388,15 +370,27 @@ class CSD(torch.utils.data.Dataset):
 
         voices = ''.join(['satb'[x] for x in voice_indices])
 
-        if self.return_name: return mix, frequencies, sources, name, voices
-        else: return mix, frequencies, sources
+        if self.return_name: 
+            return mix, frequencies, sources, name, voices
+        else: 
+            return mix, frequencies, sources
 
 
 
 class BCBQDataSets(torch.utils.data.Dataset):
 
-    def __init__(self, data_set='BC', validation_subset=False, conf_threshold=0.4, example_length=64000, allowed_voices='satb',
-                 return_name=False, n_sources=2, random_mixes=False, f0_from_mix=True, cunet_original=False, one_song=False, F0_models=False, F0_models_trainable=False):
+    def __init__(self, 
+                 data_set='BC', 
+                 validation_subset=False, 
+                 conf_threshold=0.4, 
+                 example_length=64000, 
+                 allowed_voices='satb',
+                 return_name=False, 
+                 n_sources=2, 
+                 random_mixes=False, 
+                 f0_from_mix=True, 
+                 cunet_original=False, 
+                 one_song=False):
 
         super().__init__()
 
@@ -411,19 +405,18 @@ class BCBQDataSets(torch.utils.data.Dataset):
         self.sample_rate = 16000
         self.cunet_original = cunet_original # if True, add 2 f0 values at start and end to match frame number in U-Net
         self.one_song = one_song
-        self.F0_models = F0_models
-        self.F0_models_trainable = F0_models_trainable
 
         assert n_sources <= len(allowed_voices), 'number of sources ({}) is higher than ' \
                                                  'allowed voiced to sample from ({})'.format(n_sources, len(allowed_voices))
+        
         voices_dict = {'s': 0, 'a': 1, 't': 2, 'b': 3}
         self.voice_choices = [voices_dict[v] for v in allowed_voices]
         self.voice_ids = ['s', 'a', 't', 'b']
 
-        self.audio_files = sorted(glob.glob('./Datasets/{}/audio_16kHz/*.wav'.format(data_set)))
+        self.audio_files = sorted(glob.glob('./datasets/{}/audio_16kHz/*.wav'.format(data_set)))
         # file 17_BC021_part11_s_1ch.wav is empty  --> exclude 17_BC021_part11
         self.audio_files = [f for f in self.audio_files if '17_BC021_part11' not in f]
-        self.crepe_dir = './Datasets/{}/crepe_f0_center'.format(data_set)
+        self.crepe_dir = './datasets/{}/crepe_f0_center'.format(data_set)
 
         if data_set == 'BC':
             if one_song:
@@ -440,7 +433,7 @@ class BCBQDataSets(torch.utils.data.Dataset):
                 if validation_subset: self.audio_files = self.audio_files[- (13+11)*4 :]  # only 8_BQ and 9_BQ
                 else: self.audio_files = self.audio_files[: - (13+11)*4]  # all except 8_BQ and 9_BQ
 
-        self.f0_cuesta_dir = './Datasets/{}/mixtures_{}_sources/mf0_cuesta_processed'.format(data_set, n_sources)
+        self.f0_cuesta_dir = './datasets/{}/mixtures_{}_sources/mf0_cuesta_processed'.format(data_set, n_sources)
 
         if not random_mixes:
             # number of non-overlapping excerpts
@@ -563,15 +556,14 @@ class BCBQDataSets(torch.utils.data.Dataset):
 
         voices = ''.join(['satb'[x] for x in voice_indices])
                         
-        if self.return_name: return mix, frequencies, sources, name, voices
-        elif self.F0_models and not self.F0_models_trainable: return mix, frequencies, sources
-        elif self.F0_models_trainable: return mix, frequencies, sources
-        else: return mix, frequencies, sources
+        if self.return_name: 
+            return mix, frequencies, sources, name, voices
+        else: 
+            return mix, frequencies, sources
         
         
         
 class CantoriaDataSets(torch.utils.data.Dataset):
-
     def __init__(self, 
                  song_name: str,
                  conf_threshold=0.4, 
@@ -581,11 +573,7 @@ class CantoriaDataSets(torch.utils.data.Dataset):
                  n_sources=2, 
                  random_mixes=False, 
                  f0_from_mix=True, 
-                 cunet_original=False, 
-                 one_song=False,
-                 F0_models=False, 
-                 F0_models_trainable=False,
-                 ):
+                 cunet_original=False):
 
         super().__init__()
 
@@ -599,12 +587,10 @@ class CantoriaDataSets(torch.utils.data.Dataset):
         self.f0_from_mix = f0_from_mix
         self.sample_rate = 16000
         self.cunet_original = cunet_original # if True, add 2 f0 values at start and end to match frame number in U-Net
-        self.one_song = one_song
-        self.F0_models = F0_models
-        self.F0_models_trainable = F0_models_trainable
 
         assert n_sources <= len(allowed_voices), 'number of sources ({}) is higher than ' \
                                                  'allowed voiced to sample from ({})'.format(n_sources, len(allowed_voices))
+        
         voices_dict = {'s': 0, 'a': 1, 't': 2, 'b': 3}
         self.voice_choices = [voices_dict[v] for v in allowed_voices]
         self.voice_ids = ['s', 'a', 't', 'b']
@@ -624,10 +610,10 @@ class CantoriaDataSets(torch.utils.data.Dataset):
         elif song_name == 'VBP': self.total_audio_length = 69
         elif song_name == 'YSM': self.total_audio_length = 33
         
-        self.audio_files = sorted(glob.glob('./Datasets/CantoriaDataset/{}/audio_16kHz/*.wav'.format(song_name)))
-        self.crepe_dir = './Datasets/CantoriaDataset/{}/crepe_f0_center'.format(song_name)
+        self.audio_files = sorted(glob.glob('./datasets/CantoriaDataset/{}/audio_16kHz/*.wav'.format(song_name)))
+        self.crepe_dir = './datasets/CantoriaDataset/{}/crepe_f0_center'.format(song_name)
 
-        self.f0_cuesta_dir = './Datasets/CantoriaDataset/{}/mixtures_{}_sources/mf0_cuesta_processed'.format(song_name, n_sources)
+        self.f0_cuesta_dir = './datasets/CantoriaDataset/{}/mixtures_{}_sources/mf0_cuesta_processed'.format(song_name, n_sources)
         
         if not random_mixes:
             # number of non-overlapping excerpts
@@ -743,15 +729,15 @@ class CantoriaDataSets(torch.utils.data.Dataset):
 
         voices = ''.join(['satb'[x] for x in voice_indices])
                                                 
-        if self.return_name: return mix, frequencies, sources, name, voices
-        elif self.F0_models and not self.F0_models_trainable: return mix, frequencies, sources
-        elif self.F0_models_trainable: return mix, frequencies, sources
-        else: return mix, frequencies, sources
+        if self.return_name: 
+            return mix, frequencies, sources, name, voices
+        else: 
+            return mix, frequencies, sources
 
 
 class String(torch.utils.data.Dataset):
-
-    def __init__(self, data_set='String', 
+    def __init__(self, 
+                 data_set='String', 
                  validation_subset=False, 
                  conf_threshold=0.4, 
                  example_length=64000, 
@@ -760,10 +746,7 @@ class String(torch.utils.data.Dataset):
                  n_sources=2, 
                  random_mixes=False, 
                  f0_from_mix=True, 
-                 cunet_original=False, 
-                 F0_models=False, 
-                 F0_models_trainable=False,
-                 ):
+                 cunet_original=False):
 
         super().__init__()
 
@@ -777,22 +760,21 @@ class String(torch.utils.data.Dataset):
         self.f0_from_mix = f0_from_mix
         self.sample_rate = 16000
         self.cunet_original = cunet_original # if True, add 2 f0 values at start and end to match frame number in U-Net
-        self.F0_models = F0_models
-        self.F0_models_trainable = F0_models_trainable
 
         assert n_sources <= len(allowed_voices), 'number of sources ({}) is higher than ' \
                                                  'allowed voiced to sample from ({})'.format(n_sources, len(allowed_voices))
+        
         voices_dict = {'s': 0, 'a': 1, 't': 2, 'b': 3}
         self.voice_choices = [voices_dict[v] for v in allowed_voices]
         self.voice_ids = ['s', 'a', 't', 'b']
 
-        self.audio_files = sorted(glob.glob('./Datasets/{}/audio_16kHz/*.wav'.format(data_set)))
-        self.crepe_dir = './Datasets/{}/crepe_f0_center'.format(data_set)
+        self.audio_files = sorted(glob.glob('./datasets/{}/audio_16kHz/*.wav'.format(data_set)))
+        self.crepe_dir = './datasets/{}/crepe_f0_center'.format(data_set)
 
         if validation_subset: self.audio_files = [f for f in self.audio_files if 'Violon2' in f]
         else: self.audio_files = [f for f in self.audio_files if ('Violon1', 'Viola', 'Cello') in f]
 
-        self.f0_cuesta_dir = './Datasets/{}/mixtures_{}_sources/mf0_cuesta_processed'.format(data_set, n_sources)
+        self.f0_cuesta_dir = './datasets/{}/mixtures_{}_sources/mf0_cuesta_processed'.format(data_set, n_sources)
 
         if not random_mixes:
             # number of non-overlapping excerpts
@@ -914,10 +896,10 @@ class String(torch.utils.data.Dataset):
 
         voices = ''.join(['satb'[x] for x in voice_indices])
                         
-        if self.return_name: return mix, frequencies, sources, name, voices
-        elif self.F0_models and not self.F0_models_trainable: return mix, frequencies, sources
-        elif self.F0_models_trainable: return mix, frequencies, sources
-        else: return mix, frequencies, sources
+        if self.return_name: 
+            return mix, frequencies, sources, name, voices
+        else: 
+            return mix, frequencies, sources
 
 
 # -------- HCQT Computation -------------------------------------------------------------------------------------------
@@ -1190,7 +1172,7 @@ def save_multif0_output(times, freqs, output_path):
             csv_writer.writerow(row)
 
 def test_hcqt():
-    audio_fpath = "/home/pierre/OneDrive/TELECOM/code/umss-pre/Datasets/ChoralSingingDataset/El_Rossinyol/audio_16kHz/rossinyol_Bajos_107.wav"
+    audio_fpath = "/home/pierre/OneDrive/TELECOM/code/umss-pre/datasets/ChoralSingingDataset/El_Rossinyol/audio_16kHz/rossinyol_Bajos_107.wav"
     pump = create_pump_object()
     features = compute_pump_features(pump, audio_fpath)
 
