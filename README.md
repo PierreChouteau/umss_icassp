@@ -53,6 +53,25 @@ python eval.py --tag 'TAG' --f0-from-mix --test-set 'CSD'
 Note: 'TAG' is the evaluated model's name. (Example: UMSS_4s_bcbq)
 
 
+## Inference
+
+To separate the voices of a mixture, run the `inference.py` script:
+
+```bash
+python inference.py --audio_path AUDIO_PATH --tag TAG --mode MODE --output_dir OUTPUT_DIR --device DEVICE
+```
+
+with:
+- `AUDIO_PATH`: path to the mixture audio file
+- `TAG`: name of the model to use (between our trained models, default is `W-Up_bcbq`)
+- `'MODE'`: mode to save the audio files (between `segmented_audio` and `full_audio`, default is `'segmented_audio'`).
+- `OUTPUT_DIR`: path where the separated voices will be saved (default is `'./output'`)
+- `'DEVICE'`: device to use (between `cpu` and `cuda`, default is `cpu`)
+
+
+Note: Except for `'AUDIO_PATH'`, all other arguments are optional and have default values.
+
+
 ## Trained models
 
 The trained models used in our experiments are available [here](https://drive.google.com/drive/folders/1OICrCIajHvA-gv7XofF5GWrmEp0ME3e9?usp=drive_link).
