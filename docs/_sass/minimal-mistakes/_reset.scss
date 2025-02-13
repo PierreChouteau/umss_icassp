@@ -70,9 +70,20 @@ video {
 
 /* Prevents modern browsers from displaying 'audio' without controls */
 
-audio:not([controls]) {
-  display: none;
+// audio:not([controls]) {
+//   display: none;
+// }
+
+/* Remove default styles */
+
+audio::-webkit-media-controls-mute-button {
+  display: none !important;
 }
+
+audio::-webkit-media-controls-volume-slider {
+  display: none !important;
+}
+
 
 a {
   color: $link-color;

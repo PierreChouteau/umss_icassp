@@ -76,37 +76,37 @@ For these results, we trained the different models on the __BC1Song__ dataset, a
       <tr>
         <th> <strong> Soprano </strong> </th>
         <th>
-          <audio class="px-1" controls="" controlslist="nodownload">
-            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav" type="audio/wav">
+          <audio controls>
+            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/Ref_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/Unet_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN_0/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN_1/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/W_UP/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
@@ -114,37 +114,37 @@ For these results, we trained the different models on the __BC1Song__ dataset, a
      <tr>
         <th> <strong> Alto </strong> </th>
         <th>
-          <audio class="px-1" controls="" controlslist="nodownload">
-            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav" type="audio/wav">
+          <audio controls>
+            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/Ref_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/Unet_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN_0/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN_1/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/W_UP/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav"/>
           </audio>
         </th>
@@ -152,37 +152,37 @@ For these results, we trained the different models on the __BC1Song__ dataset, a
       <tr>
         <th> <strong> Tenor </strong> </th>
         <th>
-          <audio class="px-1" controls="" controlslist="nodownload">
-            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav" type="audio/wav">
+          <audio controls>
+            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/Ref_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/Unet_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN_0/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN_1/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/W_UP/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav"/>
           </audio>
         </th>
@@ -190,37 +190,37 @@ For these results, we trained the different models on the __BC1Song__ dataset, a
       <tr>
         <th> <strong> Bass </strong> </th>
         <th>
-          <audio class="px-1" controls="" controlslist="nodownload">
-            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav" type="audio/wav">
+          <audio controls>
+            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/Ref_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/Unet_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN_0/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN_1/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/W_UP/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav"/>
           </audio>
         </th>
@@ -229,28 +229,28 @@ For these results, we trained the different models on the __BC1Song__ dataset, a
         <th> <strong> Re-synthesized mix </strong> </th>
         <th></th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/Ref_sources/mix_reconstruct_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984.wav"/>
           </audio>
         </th>
         <th></th>
          <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN/mix_reconstruct_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984.wav"/>
           </audio>
         </th>
          <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN_0/mix_reconstruct_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/VA_NN_1/mix_reconstruct_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BC1song/W_UP/mix_reconstruct_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984.wav"/>
           </audio>
         </th>
@@ -305,37 +305,37 @@ For these results, we trained the different models on the __BCBSQ__ dataset, and
       <tr>
         <th> <strong> Soprano </strong> </th>
         <th>
-          <audio class="px-1" controls="" controlslist="nodownload">
-            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav" type="audio/wav">
+          <audio controls>
+            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/Ref_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/Unet_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN_0/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN_1/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/W_UP/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
@@ -343,37 +343,37 @@ For these results, we trained the different models on the __BCBSQ__ dataset, and
      <tr>
         <th> <strong> Alto </strong> </th>
         <th>
-          <audio class="px-1" controls="" controlslist="nodownload">
-            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav" type="audio/wav">
+          <audio controls>
+            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/Ref_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/Unet_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN_0/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN_1/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/W_UP/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_a.wav"/>
           </audio>
         </th>
@@ -381,37 +381,37 @@ For these results, we trained the different models on the __BCBSQ__ dataset, and
       <tr>
         <th> <strong> Tenor </strong> </th>
         <th>
-          <audio class="px-1" controls="" controlslist="nodownload">
-            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav" type="audio/wav">
+          <audio controls>
+            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/Ref_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/Unet_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN_0/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN_1/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/W_UP/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_t.wav"/>
           </audio>
         </th>
@@ -419,37 +419,37 @@ For these results, we trained the different models on the __BCBSQ__ dataset, and
       <tr>
         <th> <strong> Bass </strong> </th>
         <th>
-          <audio class="px-1" controls="" controlslist="nodownload">
-            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav" type="audio/wav">
+          <audio controls>
+            <source src="/audio/Apprentissage_Conjoint/Original_sources/target_sources_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/Ref_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/Unet_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN_0/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN_1/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/W_UP/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_b.wav"/>
           </audio>
         </th>
@@ -458,28 +458,28 @@ For these results, we trained the different models on the __BCBSQ__ dataset, and
         <th> <strong> Re-synthesized mix </strong> </th>
         <th></th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/Ref_sources/mix_reconstruct_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984.wav"/>
           </audio>
         </th>
         <th></th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN/mix_reconstruct_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN_0/mix_reconstruct_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/VA_NN_1/mix_reconstruct_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/Apprentissage_Conjoint/BCBQ/W_UP/mix_reconstruct_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984.wav"/>
           </audio>
         </th>
@@ -497,7 +497,7 @@ For these results, we trained the different models on the __BCBSQ__ dataset, and
 
 
 > Audio Mix Example
-<audio controls="">
+<audio controls>
   <source src="/audio/cantoria/mix/mix_CEA_satb_15.984.wav"/>
 </audio>
 
@@ -528,22 +528,22 @@ For these results, we trained the different models on the __BCBSQ__ dataset, and
       <tr>
         <th> <strong> Soprano </strong> </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/target_sources/target_sources_CEA_satb_15.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio class="px-1" controls="" controlslist="nodownload">
-            <source src="/audio/cantoria/BCBSQ/US/sources_estimates_masking_CEA_satb_15.984_voice_s.wav" type="audio/wav">
+          <audio controls>
+            <source src="/audio/cantoria/BCBSQ/US/sources_estimates_masking_CEA_satb_15.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/BCBSQ/Unet/sources_estimates_masking_CEA_satb_15.984_voice_s.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/BCBSQ/W-Up/sources_estimates_masking_CEA_satb_15.984_voice_s.wav"/>
           </audio>
         </th>
@@ -551,22 +551,22 @@ For these results, we trained the different models on the __BCBSQ__ dataset, and
       <tr>
         <th> <strong> Alto </strong> </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/target_sources/target_sources_CEA_satb_15.984_voice_a.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/BCBSQ/US/sources_estimates_masking_CEA_satb_15.984_voice_a.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/BCBSQ/Unet/sources_estimates_masking_CEA_satb_15.984_voice_a.wav"/>
           </audio>
         </th>
          <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/BCBSQ/W-Up/sources_estimates_masking_CEA_satb_15.984_voice_a.wav"/>
           </audio>
         </th>
@@ -574,22 +574,22 @@ For these results, we trained the different models on the __BCBSQ__ dataset, and
       <tr>
         <th> <strong> Tenor </strong> </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/target_sources/target_sources_CEA_satb_15.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/BCBSQ/US/sources_estimates_masking_CEA_satb_15.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/BCBSQ/Unet/sources_estimates_masking_CEA_satb_15.984_voice_t.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/BCBSQ/W-Up/sources_estimates_masking_CEA_satb_15.984_voice_t.wav"/>
           </audio>
         </th>
@@ -597,22 +597,22 @@ For these results, we trained the different models on the __BCBSQ__ dataset, and
       <tr>
         <th> <strong> Bass </strong> </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/target_sources/target_sources_CEA_satb_15.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/BCBSQ/US/sources_estimates_masking_CEA_satb_15.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/BCBSQ/Unet/sources_estimates_masking_CEA_satb_15.984_voice_b.wav"/>
           </audio>
         </th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/BCBSQ/W-Up/sources_estimates_masking_CEA_satb_15.984_voice_b.wav"/>
           </audio>
         </th>
@@ -621,13 +621,13 @@ For these results, we trained the different models on the __BCBSQ__ dataset, and
         <th> <strong> Re-synthesized mix </strong> </th>
         <th></th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/BCBSQ/US/mix_reconstruct_CEA_satb_15.984.wav"/>
           </audio>
         </th>
         <th></th>
         <th>
-          <audio controls="">
+          <audio controls>
             <source src="/audio/cantoria/BCBSQ/W-Up/mix_reconstruct_CEA_satb_15.984.wav"/>
           </audio>
         </th>
