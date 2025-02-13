@@ -84,12 +84,12 @@ python inference.py --audio_path AUDIO_PATH --tag TAG --mode MODE --output_dir O
 with:
 - `AUDIO_PATH`: path to the mixture audio file
 - `TAG`: name of the model to use (between our trained models, default is `W-Up_bcbq`)
-- `'MODE'`: mode to save the audio files (between `segmented_audio` and `full_audio`, default is `'segmented_audio'`).
-- `OUTPUT_DIR`: path where the separated voices will be saved (default is `'./output'`)
-- `'DEVICE'`: device to use (between `cpu` and `cuda`, default is `cpu`)
+- `MODE`: mode to save the audio files (between `segmented_audio` and `full_audio`, default is `segmented_audio`).
+- `OUTPUT_DIR`: path where the separated voices will be saved (default is `./output`)
+- `DEVICE`: device to use (between `cpu` and `cuda`, default is `cpu`)
 
 
-Note: Except for `'AUDIO_PATH'`, all other arguments are optional and have default values.
+Note: Except for `AUDIO_PATH`, all other arguments are optional and have default values.
 
 
 ## Trained models

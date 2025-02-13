@@ -121,8 +121,8 @@ elif args.test_set == 'BCBQ':
                             allowed_voices='satb',
                             f0_from_mix=f0_cuesta,
                             cunet_original=original_cunet,
-                            cuesta_model=False,
-                            cuesta_model_trainable=False)
+                            F0_models=False,
+                            F0_models_trainable=False)
 
     bq_val = data.BCBQDataSets(data_set='BQ',
                             validation_subset=True,
@@ -134,8 +134,8 @@ elif args.test_set == 'BCBQ':
                             allowed_voices='satb',
                             f0_from_mix=f0_cuesta,
                             cunet_original=original_cunet,
-                            cuesta_model=False,
-                            cuesta_model_trainable=False)
+                            F0_models=False,
+                            F0_models_trainable=False)
     
     test_set = torch.utils.data.ConcatDataset([bc_val, bq_val])
 
@@ -150,9 +150,8 @@ elif args.test_set == 'cantoria':
                                 random_mixes=False, 
                                 f0_from_mix=f0_cuesta, 
                                 cunet_original=original_cunet, 
-                                cuesta_model=False, 
-                                cuesta_model_trainable=False,
-                                )
+                                F0_models=False, 
+                                F0_models_trainable=False)
 
     ejb2 = data.CantoriaDataSets(song_name='EJB2',
                                 conf_threshold=0.4, 
@@ -163,9 +162,8 @@ elif args.test_set == 'cantoria':
                                 random_mixes=False, 
                                 f0_from_mix=f0_cuesta, 
                                 cunet_original=original_cunet, 
-                                cuesta_model=False, 
-                                cuesta_model_trainable=False,
-                                )
+                                F0_models=False, 
+                                F0_models_trainable=False)
     
     cea = data.CantoriaDataSets(song_name='CEA',
                                 conf_threshold=0.4, 
@@ -176,9 +174,8 @@ elif args.test_set == 'cantoria':
                                 random_mixes=False, 
                                 f0_from_mix=f0_cuesta, 
                                 cunet_original=original_cunet, 
-                                cuesta_model=False, 
-                                cuesta_model_trainable=False,
-                                )
+                                F0_models=False, 
+                                F0_models_trainable=False)
 
     test_set = torch.utils.data.ConcatDataset([ejb1, ejb2, cea])
 
