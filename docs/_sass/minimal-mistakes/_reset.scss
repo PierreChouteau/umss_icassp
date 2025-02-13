@@ -70,20 +70,11 @@ video {
 
 /* Prevents modern browsers from displaying 'audio' without controls */
 
-// audio:not([controls]) {
-//   display: none;
-// }
-
-/* Remove default styles */
-
-audio::-webkit-media-controls-mute-button {
-  display: none !important;
+audio:not([controls]),
+audio:not([controls]) ::-webkit-media-controls-mute-button,
+audio:not([controls]) ::-webkit-media-controls-volume-slider {
+  display: none;
 }
-
-audio::-webkit-media-controls-volume-slider {
-  display: none !important;
-}
-
 
 a {
   color: $link-color;
