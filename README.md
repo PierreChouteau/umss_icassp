@@ -89,7 +89,9 @@ with:
 - `DEVICE`: device to use (between `cpu` and `cuda`, default is `cpu`)
 
 
-Note: Except for `AUDIO_PATH`, all other arguments are optional and have default values.
+Notes: 
+- Except for `AUDIO_PATH`, all other arguments are optional and have default values.
+- The model will be loaded from the [`trained_models`](./trained_models/) directory. Make sure to download the trained models from the link below.
 
 
 ## Trained models
