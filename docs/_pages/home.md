@@ -9,7 +9,8 @@ header:
   overlay_filter: "0.6"
 ---
 
-Welcome to the companion website of our ICASSP Paper. You will find audio examples corresponding to the different results presented in the article [here](./audio.md).
+Welcome to the companion website of our ICASSP Paper. You will find audio examples corresponding to the results presented in the article [here](./audio.md).
+{: .text-justify}
 
 
 # Abstract
