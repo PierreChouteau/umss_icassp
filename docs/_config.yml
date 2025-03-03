@@ -16,14 +16,14 @@ minimal_mistakes_skin    : "contrast" # "default" # "air", "aqua", "contrast", "
 
 # Site Settings
 locale                   : "en-US"
-title                    : "A fully differentiable model for unsupervised singing voice separation"
+title                    : "A Fully Differentiable Model for Unsupervised Singing Voice Separation"
 title_separator          : "-"
-subtitle                 : "Companion website for the ICASSP article."
+subtitle                 : "Companion website for the ICASSP article"
 name                     : ""
 description              : ""
-url                      : "https://PierreChouteau.github.io/" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+url                      : "https://PierreChouteau.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
-repository               : "PierreChouteau/PierreChouteau.github.io" # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
+repository               : "PierreChouteau/umss_icassp" # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 logo                     : # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
 masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
