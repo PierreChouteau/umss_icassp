@@ -13,19 +13,13 @@ toc_label: "Table of Contents"
 toc_icon: "cog"
 toc_sticky: true
 ---
-<html>
-
-</html>
-
 
 Welcome to the audio examples page. Here you'll find the results of our experiments, as well as audio examples of music source separation.
+{: .text-justify}
 
-
-<!-- For experiments where our architecture is compared to the [__US__](https://ieeexplore.ieee.org/document/10058592) model by Schulze-Foster _et al._ and the [__U-Net__](https://program.ismir2020.net/poster_5-14.html) model by Petermann _et al._, we show only our two best approaches:
-- __VA_NN_2__
-- __Warmup__ -->
 
 All the audios presented below are taken from the evaluation datasets: __ChoralSingingDataset__ or __Cantoría__.
+{: .text-justify}
 
 
 ---
@@ -34,6 +28,7 @@ All the audios presented below are taken from the evaluation datasets: __ChoralS
 ## BC1song
 
 For these results, we trained the different models on the __BC1Song__ dataset, and evaluated on the __ChoralSingingDataset__ dataset. These results are presented in the table 1a of the paper, and audio examples are shown below.
+{: .text-justify}
 
 > Audio Mix Example
 <audio controls>
@@ -263,6 +258,7 @@ For these results, we trained the different models on the __BC1Song__ dataset, a
 ## BCBSQ
 
 For these results, we trained the different models on the __BCBSQ__ dataset, and evaluated on the __ChoralSingingDataset__ dataset. These results are presented in the table 1b of the paper, and audio examples are shown below.
+{: .text-justify}
 
 > Audio Mix Example
 <audio controls>
@@ -494,7 +490,7 @@ For these results, we trained the different models on the __BCBSQ__ dataset, and
 # Generalization capabilities on a new dataset: Cantoría
 
 For these results, we trained the different models on the __BCBSQ__ dataset, and evaluated them on the __Cantoría__ dataset. These results are presented in the table 3 of the paper, and audio examples are shown below.
-
+{: .text-justify}
 
 > Audio Mix Example
 <audio controls>
