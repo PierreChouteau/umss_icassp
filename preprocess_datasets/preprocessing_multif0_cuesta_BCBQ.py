@@ -11,8 +11,7 @@ import os
 import numpy as np
 import torch
 
-import ddsp.core
-import data
+from models.ddsp import core
 
 
 def compute_frame_distance(frame_1, frame_2, assigned_frames=None, n=0, backward_pass=False):
@@ -64,18 +63,222 @@ def compute_frame_distance(frame_1, frame_2, assigned_frames=None, n=0, backward
 
 
 
-path_to_dataset = './datasets/ChoralSingingDataset'
-songs = ['El_Rossinyol', 'Locus_Iste', 'Nino_Dios']
+def f0_assignement(mf0, audio_length, n_sources):
+    
+    minimum = 10000.0
+    
+    # on ajout une ligne de 0 au début et à la fin pour s'assurer que l'algorithme fonctionne
+    f0_estimates = [[0.0 for i in range(n_sources)]]
+    # f0_estimates = []
+    for f0 in mf0:
+        if len(f0) > 0 and min(f0) < minimum: minimum = min(f0)
+        while len(f0) < n_sources: 
+            f0 = np.append(f0, 0)
+        f0_estimates.append(sorted(f0))
+        
+    # deuxième ajout de fréquences
+    f0_estimates.append([0.0 for i in range(n_sources)])
+        
+    labels = []
+    for n, freqs in enumerate(f0_estimates):
+        if len(freqs) > n_sources: labels.append('n_f0>n_s')
+        elif sum(freqs) == 0: labels.append('all_zero')
+        elif freqs[0] == 0 and sum(freqs[1:]) != 0: labels.append('1+_zero')
+        else: labels.append('no_zero')
 
-mixture_dirs = ['mixtures_2_sources', 'mixtures_3_sources', 'mixtures_4_sources']
+    idx_decision_required = [i for i, j in enumerate(labels) if j == '1+_zero' or j == 'n_f0>n_s']
+    subsequence_start = []
+    subsequence_end = []
+    labels_that_require_decision = ['1+_zero', 'n_f0>n_s']
+    for n, label in enumerate(labels):
+        # if n == 0 and label in labels_that_require_decision:
+        #     subsequence_start.append((-1, 'all_zero'))
+        if n < len(labels) - 1 and label not in labels_that_require_decision and labels[n+1] in labels_that_require_decision:
+            subsequence_start.append((n, label))
+        if n > 0 and label not in labels_that_require_decision and labels[n-1] in labels_that_require_decision:
+            subsequence_end.append((n, label))
+        # if n == len(labels) - 1 and label in labels_that_require_decision:
+        #     subsequence_end.append((n, label))
+    assert len(subsequence_start) == len(subsequence_end), 'these lists must have the same length'
 
-for song in songs:
+    f0_assigned = np.zeros((len(f0_estimates), n_sources))
+
+    # assign f0 values that do not need any decision (they are assigned by sorting)
+    for n, f0s in enumerate(f0_estimates):
+        if n not in idx_decision_required:
+            f0_assigned[n, :] = f0s
+
+    # make decisions for the rest of the f0 estimates
+    for n, start_boundary in enumerate(subsequence_start):
+        start_boundary_frame, start_label = start_boundary
+        end_boundary_frame, end_label = subsequence_end[n]
+        if start_label == 'no_zero' and end_label == 'all_zero':
+            # forward pass
+            for m in range(start_boundary_frame+1, end_boundary_frame):
+                permutations = list(itertools.permutations(f0_estimates[m]))
+                distance_to_prev = []
+                for p in permutations:
+                    p = p[:n_sources]
+                    distance = compute_frame_distance(p, f0_assigned[m-1, :], f0_assigned, n=m, backward_pass=False)
+                    distance_to_prev.append(distance)
+                best_perm_idx = np.argmin(distance_to_prev)
+                f0_assigned[m, :] = permutations[best_perm_idx][:n_sources]
+
+        elif start_label == 'all_zero' and end_label == 'no_zero':
+            # backward pass
+            for m in range(end_boundary_frame - 1, start_boundary_frame, -1):
+                permutations = list(itertools.permutations(f0_estimates[m]))
+                distance_to_prev = []
+                for p in permutations:
+                    p = p[:n_sources]
+                    distance = compute_frame_distance(p, f0_assigned[m+1, :], f0_assigned, n=m, backward_pass=True)
+                    distance_to_prev.append(distance)
+                best_perm_idx = np.argmin(distance_to_prev)
+                f0_assigned[m, :] = permutations[best_perm_idx][:n_sources]
+
+        elif start_label == end_label == 'no_zero':
+            # forward and backward pass
+
+            # forward pass
+            forward_distances = []
+            forward_f0_assignments = []
+            for m in range(start_boundary_frame+1, end_boundary_frame):
+                permutations = list(itertools.permutations(f0_estimates[m]))
+                distance_to_prev = []
+                for p in permutations:
+                    p = p[:n_sources]
+                    distance = compute_frame_distance(p, f0_assigned[m-1, :], f0_assigned, n=m, backward_pass=False)
+                    distance_to_prev.append(distance)
+                best_perm_idx = np.argmin(distance_to_prev)
+                forward_distances.append(min(distance_to_prev))
+                forward_f0_assignments.append(permutations[best_perm_idx][:n_sources])
+                f0_assigned[m, :] = permutations[best_perm_idx][:n_sources]
+            forward_distances.append(compute_frame_distance(permutations[best_perm_idx][:n_sources], f0_assigned[end_boundary_frame, :], f0_assigned))
+            forward_distance = sum(forward_distances)
+            f0_assigned[start_boundary_frame+1:end_boundary_frame, :] = [0] * n_sources
+
+            # backward pass
+            backward_distances = []
+            backward_f0_assignments =[]
+            for m in range(end_boundary_frame - 1, start_boundary_frame, -1):
+                permutations = list(itertools.permutations(f0_estimates[m]))
+                distance_to_prev = []
+                for p in permutations:
+                    p = p[:n_sources]
+                    distance = compute_frame_distance(p, f0_assigned[m+1, :], f0_assigned, n=m, backward_pass=True)
+                    distance_to_prev.append(distance)
+                best_perm_idx = np.argmin(distance_to_prev)
+                backward_distances.append(min(distance_to_prev))
+                backward_f0_assignments.append(permutations[best_perm_idx][:n_sources])
+                f0_assigned[m, :] = permutations[best_perm_idx][:n_sources]
+            backward_distances.append(compute_frame_distance(permutations[best_perm_idx][:n_sources], f0_assigned[start_boundary_frame, :], f0_assigned))
+            backward_distance = sum(backward_distances)
+
+            # print('forward_distances', forward_distances)
+            # print('backward_distances', backward_distances)
+            # compare forward and backward accumulated distances and decide which assignment to take
+            if forward_distance <= backward_distance:
+                f0_assigned[start_boundary_frame+1:end_boundary_frame, :] = forward_f0_assignments
+
+        elif start_label == end_label == 'all_zero':
+            # find first previous/subsequent no_zero frames for start/end frames and use them as boundaries
+            if start_boundary_frame == -1:
+                try: prev_no_zero_frame = start_boundary_frame
+                except ValueError: prev_no_zero_frame = start_boundary_frame
+                try: next_no_zero_frame = end_boundary_frame + labels[end_boundary_frame:].index('no_zero')
+                except ValueError: next_no_zero_frame = end_boundary_frame
+            
+            else:
+                try: prev_no_zero_frame = start_boundary_frame - 1 - labels[:start_boundary_frame][::-1].index('no_zero')
+                except ValueError: prev_no_zero_frame = start_boundary_frame
+                try: next_no_zero_frame = end_boundary_frame + labels[end_boundary_frame:].index('no_zero')
+                except ValueError: next_no_zero_frame = end_boundary_frame
+
+            # forward pass
+            forward_distances = []
+            forward_f0_assignments = []
+            for m in range(prev_no_zero_frame+1, next_no_zero_frame):
+                permutations = list(itertools.permutations(f0_estimates[m]))
+                distance_to_prev = []
+                for p in permutations:
+                    p = p[:n_sources]
+                    distance = compute_frame_distance(p, f0_assigned[m-1, :], f0_assigned, n=m, backward_pass=False)
+                    distance_to_prev.append(distance)
+                best_perm_idx = np.argmin(distance_to_prev)
+                forward_distances.append(min(distance_to_prev))
+                forward_f0_assignments.append(permutations[best_perm_idx][:n_sources])
+                f0_assigned[m, :] = permutations[best_perm_idx][:n_sources]
+            forward_distance = sum(forward_distances)
+            f0_assigned[prev_no_zero_frame+1:next_no_zero_frame, :] = [0] * n_sources
+
+            # backward pass
+            backward_distances = []
+            backward_f0_assignments =[]
+            for m in range(next_no_zero_frame - 1, prev_no_zero_frame, -1):
+                permutations = list(itertools.permutations(f0_estimates[m]))
+                distance_to_prev = []
+                for p in permutations:
+                    p = p[:n_sources]
+                    distance = compute_frame_distance(p, f0_assigned[m+1, :], f0_assigned, n=m, backward_pass=True)
+                    distance_to_prev.append(distance)
+                best_perm_idx = np.argmin(distance_to_prev)
+                backward_distances.append(min(distance_to_prev))
+                backward_f0_assignments.append(permutations[best_perm_idx][:n_sources])
+                f0_assigned[m, :] = permutations[best_perm_idx][:n_sources]
+            backward_distance = sum(backward_distances)
+
+            # print('forward_distances', forward_distance)
+            # print('backward_distances', backward_distance)
+            # compare forward and backward accumulated distances and decide which assignment to take
+            if forward_distance <= backward_distance:
+                f0_assigned[prev_no_zero_frame+1:next_no_zero_frame, :] = forward_f0_assignments
+
+        else:
+            # one label is 'n_f0>n_s' and needs to be corrected before making a decision here
+            pass
+
+    # on enlève les 0 en début et fin de f0_assigned (lié à l'astuce utilisé au démarrage)
+    f0_assigned = f0_assigned[1:-1, :]
+            
+    # compute number of STFT frames for the song
+    n_stft_frames = 16000 * audio_length // 256
+
+    # resample and save as torch.Tensor
+    f0_cuesta = torch.tensor(f0_assigned).transpose(0, 1)  # [n_sources, n_frames]
+    
+    # It uses a bilinear interpolation to obtain smooth trajectories
+    f0_cuesta_old = core.resample(f0_cuesta, n_stft_frames)
+    
+    # we remove the f0 values that are below the minimum of the f0 determined by cuesta => because they are not reliable
+    for j, freqs in enumerate(f0_cuesta_old):
+        for i, f in enumerate(freqs):
+            if f < minimum:
+                f0_cuesta_old[j][i] = 0.0  
+        
+    f0_cuesta_old = f0_cuesta_old.transpose(0, 1)  # [n_frames, n_sources]
+    f0_cuesta_old = f0_cuesta_old.flip(dims=(1,))
+        
+    f0_cuesta_new = f0_cuesta.transpose(0, 1)  # [n_frames, n_sources]
+    f0_cuesta_new = f0_cuesta_new.flip(dims=(1,))
+    
+    return f0_cuesta_old, f0_cuesta_new
+
+
+
+if __name__ == '__main__':
+    path_to_dataset = '../datasets/BC'
+    # songs = ['El Rossinyol', 'Locus Iste', 'Nino Dios']
+
+    # mixture_dirs = ['mixtures_2_sources', 'mixtures_3_sources', 'mixtures_4_sources']
+    mixture_dirs = ['mixtures_test']
+
+    # for song in songs:
     for s, mix_dir in enumerate(mixture_dirs):
 
-        n_sources = s + 2
+        n_sources = 4
         print(n_sources)
 
-        path_to_f0_csv_files = os.path.join(path_to_dataset, song, mix_dir)
+        path_to_f0_csv_files = os.path.join(path_to_dataset, mix_dir)
         path_to_save_f0_estimate_tensors = os.path.join(path_to_f0_csv_files, 'mf0_cuesta_processed')
 
         # make directory to save processed f0 estimates as torch tensor
@@ -83,8 +286,9 @@ for song in songs:
             os.makedirs(path_to_save_f0_estimate_tensors, exist_ok=True)
 
         f0_csv_files = sorted(list(glob.glob(path_to_f0_csv_files + '/*.csv')))
-
+        
         for f0_csv_file in f0_csv_files:
+            print(f0_csv_file)
             time = []
             f0_estimates = []
             with open(f0_csv_file, newline='') as csv_file:
@@ -94,7 +298,6 @@ for song in songs:
                     while len(row) < n_sources + 1: row.append(0)  # fill frames without detected f0s with zeros
                     time.append(row[0])
                     f0_estimates.append(sorted(row[1:]))  # assume that the voices do not cross in f0 and assign ordered f0 to ordered sources
-
             labels = []
             for n, freqs in enumerate(f0_estimates):
                 if len(freqs) > n_sources: labels.append('n_f0>n_s')
@@ -103,17 +306,18 @@ for song in songs:
                 else: labels.append('no_zero')
 
             idx_decision_required = [i for i, j in enumerate(labels) if j == '1+_zero' or j == 'n_f0>n_s']
-
             subsequence_start = []
             subsequence_end = []
             labels_that_require_decision = ['1+_zero', 'n_f0>n_s']
             for n, label in enumerate(labels):
-
+                if n == 0 and label in labels_that_require_decision:
+                    subsequence_start.append((-1, 'all_zero'))
                 if n < len(labels) - 1 and label not in labels_that_require_decision and labels[n+1] in labels_that_require_decision:
                     subsequence_start.append((n, label))
                 if n > 0 and label not in labels_that_require_decision and labels[n-1] in labels_that_require_decision:
                     subsequence_end.append((n, label))
-
+                if n == len(labels) - 1 and label in labels_that_require_decision:
+                    subsequence_end.append((n, label))
             assert len(subsequence_start) == len(subsequence_end), 'these lists must have the same length'
 
             f0_assigned = np.zeros((len(f0_estimates), n_sources))
@@ -127,7 +331,6 @@ for song in songs:
             for n, start_boundary in enumerate(subsequence_start):
                 start_boundary_frame, start_label = start_boundary
                 end_boundary_frame, end_label = subsequence_end[n]
-
                 if start_label == 'no_zero' and end_label == 'all_zero':
                     # forward pass
                     for m in range(start_boundary_frame+1, end_boundary_frame):
@@ -198,10 +401,17 @@ for song in songs:
 
                 elif start_label == end_label == 'all_zero':
                     # find first previous/subsequent no_zero frames for start/end frames and use them as boundaries
-                    try: prev_no_zero_frame = start_boundary_frame - 1 - labels[:start_boundary_frame][::-1].index('no_zero')
-                    except ValueError: prev_no_zero_frame = start_boundary_frame
-                    try: next_no_zero_frame = end_boundary_frame + labels[end_boundary_frame:].index('no_zero')
-                    except ValueError: next_no_zero_frame = end_boundary_frame
+                    if start_boundary_frame == -1:
+                        try: prev_no_zero_frame = start_boundary_frame
+                        except ValueError: prev_no_zero_frame = start_boundary_frame
+                        try: next_no_zero_frame = end_boundary_frame + labels[end_boundary_frame:].index('no_zero')
+                        except ValueError: next_no_zero_frame = end_boundary_frame
+                    
+                    else:
+                        try: prev_no_zero_frame = start_boundary_frame - 1 - labels[:start_boundary_frame][::-1].index('no_zero')
+                        except ValueError: prev_no_zero_frame = start_boundary_frame
+                        try: next_no_zero_frame = end_boundary_frame + labels[end_boundary_frame:].index('no_zero')
+                        except ValueError: next_no_zero_frame = end_boundary_frame
 
                     # forward pass
                     forward_distances = []
@@ -247,16 +457,14 @@ for song in songs:
                     pass
 
 
-            if song == 'El_Rossinyol': audio_length = 134
-            elif song == 'Locus_Iste': audio_length = 190
-            elif song == 'Nino_Dios': audio_length = 103
+            audio_length = 10
 
             # compute number of STFT frames for the song
             n_stft_frames = 16000 * audio_length // 256
 
             # resample and save as torch.Tensor
             f0_cuesta = torch.tensor(f0_assigned).transpose(0, 1)  # [n_sources, n_frames]
-            f0_cuesta = ddsp.core.resample(f0_cuesta, n_stft_frames)
+            f0_cuesta = core.resample(f0_cuesta, n_stft_frames)
             f0_cuesta = f0_cuesta.transpose(0, 1)  # [n_frames, n_sources]
             f0_cuesta = f0_cuesta.flip(dims=(1,))
 

@@ -60,10 +60,10 @@ loss-delta-freq-weight = 0
 loss-delta-time-weight = 0
 loss-lsf-weight = 0  # LSF regularization loss
 
-loss-saliences-weight = 10000
-loss-voices-weight = 100000
-loss-comittment-weight = 10000
-loss-f0-weight = 1
+loss-saliences-weight = 0
+loss-voices-weight = 0
+loss-comittment-weight = 0
+loss-f0-weight = 0
 loss-1voice-per-salience-weight = 0
 
 ss-loss-weight = 0
@@ -104,7 +104,7 @@ f-ref-source-spec = 200
 # source-spectrum = flat
 
 return-sources = True
-F0-models = True
-F0-models-trainable = True
+F0-models = False
+F0-models-trainable = False
 MultiF0-estimator-trainable = False
 method = reconstruction # other possibilities: sigmoid, amplitude, ste, reconstruction, softmax, threshold
