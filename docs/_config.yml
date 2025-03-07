@@ -19,8 +19,8 @@ locale                   : "en-US"
 title                    : "A Fully Differentiable Model for Unsupervised Singing Voice Separation"
 title_separator          : "-"
 subtitle                 : "Companion website for the ICASSP article"
-name                     : ""
-description              : ""
+name                     : "Pierre Chouteau"
+description              : "Companion website for the ICASSP article"
 url                      : "https://PierreChouteau.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "/umss_icassp" # the subpath of your site, e.g. "/blog"
 repository               : "PierreChouteau/umss_icassp" # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
@@ -106,7 +106,7 @@ analytics:
 author:
   name             : "Pierre Chouteau"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "ATIAM student"
+  bio              : "Research Engineer"
   location         : "Télécom Paris, Palaiseau"
   email            :
   links:
