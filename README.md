@@ -3,7 +3,6 @@
 ## Description
 
 This is the source code for the experiments related to our ICASSP 2024 paper, ***A Fully Differentiable Model for Unsupervised Singing Voice Separation***.
-{: .text-justify}
 
 We proposed to extend the work of *Schultze-Foster et al.*$^{1}$, and to build a complete, fully differentiable model by integrating a multipitch estimator and a novel differentiable voice assignment module within the core model.
 
