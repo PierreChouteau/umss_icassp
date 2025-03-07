@@ -4,7 +4,7 @@
 
 This is the source code for the experiments related to our ICASSP 2024 paper, [***A Fully Differentiable Model for Unsupervised Singing Voice Separation***](https://ieeexplore.ieee.org/abstract/document/10447244).
 
-We propose to extend the work of *Schultze-Foster et al.*$^{1}$, and to build a complete, fully differentiable model by integrating a multipitch estimator and a novel differentiable voice assignment module within the core model.
+We proposed to extend the work of *Schultze-Foster et al.*$^{1}$, and to build a complete, fully differentiable model by integrating a multipitch estimator and a novel differentiable voice assignment module within the core model.
 
 __Note 1:__ This project builds upon the model of *Schultze-Foster et al.* and parts of the code are taken/adapted from their [repository](https://github.com/schufo/umss).
 
@@ -18,11 +18,11 @@ __Note 2:__ The trained models of [multif0-estimation-polyvocals](https://github
 
 ## Links
 
-[:page_facing_up:]() [Paper](https://ieeexplore.ieee.org/abstract/document/10447244)
+[:page_facing_up: Paper](https://ieeexplore.ieee.org/abstract/document/10447244)
 
 [:loud_sound: Audio examples](https://pierrechouteau.github.io/umss_icassp)
 
-[:file_folder:]() [CSD Database](https://zenodo.org/record/1286570#.Y0ZsbNJByUk) | [Cantoría Database](https://zenodo.org/record/5851070)
+[:file_folder: CSD Database](https://zenodo.org/record/1286570#.Y0ZsbNJByUk) | [Cantoría Database](https://zenodo.org/record/5851070)
 
 
 ## Installing the working environment
@@ -37,7 +37,7 @@ conda env create -f environment.yml
 ## Training
 
 To start the training, run the `train.py` or `train_unets.py` script:
-```
+```bash
 python train.py -c config.txt
 ```
 
@@ -50,9 +50,9 @@ python train_u_nets.py -c unet_config.txt
 To evaluate the model, run the `eval.py` script:
 
 ```bash
-python eval.py --tag 'TAG' --f0-from-mix --test-set 'CSD'
+python eval.py --tag TAG --f0-from-mix --test-set CSD --show-progress
 ```
-Note: 'TAG' is the evaluated model's name. (Example: UMSS_4s_bcbq)
+Note: `TAG` is the evaluated model's name. (Example: `UMSS_4s_bcbq`)
 
 
 ## Inference
