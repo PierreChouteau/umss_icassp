@@ -2,7 +2,7 @@
 
 ## Description
 
-This is the source code for the experiments related to our ICASSP 2024 paper, ***A Fully Differentiable Model for Unsupervised Singing Voice Separation***.
+This is the source code for the experiments related to our ICASSP 2024 paper, [***A Fully Differentiable Model for Unsupervised Singing Voice Separation***](https://ieeexplore.ieee.org/abstract/document/10447244).
 
 We proposed to extend the work of *Schultze-Foster et al.*$^{1}$, and to build a complete, fully differentiable model by integrating a multipitch estimator and a novel differentiable voice assignment module within the core model.
 
@@ -18,7 +18,9 @@ __Note 2:__ The trained models of [multif0-estimation-polyvocals](https://github
 
 ## Links
 
-[:loud_sound: Audio examples](https://pierrechouteau.github.io/)
+[:page_facing_up:]() [Paper](https://ieeexplore.ieee.org/abstract/document/10447244)
+
+[:loud_sound: Audio examples](https://pierrechouteau.github.io/umss_icassp)
 
 [:file_folder:]() [CSD Database](https://zenodo.org/record/1286570#.Y0ZsbNJByUk) | [Cantoría Database](https://zenodo.org/record/5851070)
 
