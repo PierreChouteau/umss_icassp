@@ -19,3 +19,4 @@ A novel model was recently proposed by [Schulze-Forster & al.](https://ieeexplor
 {: .text-justify}
 
 **Index Terms** - Unsupervised source separation, multiple singing voices, differentiable models, deep learning
+{: .text-justify}
