@@ -81,7 +81,7 @@ For these results, we trained the different models on the __BC1Song__ dataset, a
           </audio>
         </th>
         <th>
-          <audio controls>
+          <audio controls="">
             <source src="/audio/Apprentissage_Conjoint/BC1song/Unet_sources/sources_estimates_masking_el_rossinyol_Sno_208_At_2-06_Tor2-09_Bos_207_27.984_voice_s.wav"/>
           </audio>
         </th>
